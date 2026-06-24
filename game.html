@@ -16,7 +16,7 @@
             color: #fdfbf7; /* Kasavu Cream */
             overflow-x: hidden; 
             user-select: none; 
-            margin: 0; 
+            margin:0; 
             background-image: radial-gradient(circle at center, #042915 0%, #02160b 100%);
         }
 
@@ -27,14 +27,13 @@
         /* SLOW MOTION 3D TRANSITION */
         .transform-3d { 
             transform-style: preserve-3d; 
-            transition: transform 1.8s cubic-bezier(0.25, 1, 0.5, 1); /* Very slow and graceful */
+            transition: transform 1.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .rotate-y-180 { transform: rotateY(180deg); }
         .backface-hidden { backface-visibility: hidden; }
         
         .divine-glow { box-shadow: 0 0 25px rgba(251, 191, 36, 0.3), inset 0 0 15px rgba(251, 191, 36, 0.1); }
         
-        /* Soft, slow blinking cursor */
         .cursor::after {
             content: '🪔';
             font-size: 0.8em;
@@ -48,7 +47,6 @@
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4 max-w-md mx-auto">
-    <!-- SLOW GOLDEN FIREFLIES / KANIKKONNA PETALS -->
     <canvas id="divine-sparks" class="absolute inset-0 pointer-events-none z-0 opacity-70"></canvas>
 
     <!-- FRONT PAGE -->
@@ -58,7 +56,7 @@
         <button onclick="startGame()" class="w-36 h-36 rounded-full bg-gradient-to-br from-amber-200 to-amber-600 p-1.5 shadow-[0_0_40px_rgba(251,191,36,0.3)] active:scale-95 transition-all duration-700">
             <div class="w-full h-full rounded-full bg-[#032010] flex items-center justify-center border border-amber-500/50 divine-glow">
                 <span class="font-trad text-lg font-bold text-amber-200 uppercase tracking-widest">Press<br>Here</span>
-            </div>
+            </div> 
         </button>
     </div>
 
@@ -69,7 +67,6 @@
             <span class="bg-amber-900/40 border border-amber-500/50 text-amber-300 px-4 py-1.5 rounded-full text-xs font-trad italic tracking-widest shadow-inner">🪔 The Game Starts</span>
             <h2 class="font-trad text-2xl font-bold mt-4 text-amber-50 drop-shadow-md">Reveal The Name</h2>
             
-            <!-- SYSTEM STATUS -->
             <div id="motivation" class="mt-4 text-sm font-trad italic text-amber-200/80 font-medium h-4 tracking-wide transition-all duration-1000">
                 "May the wisdom of the ancestors guide you."
             </div>
@@ -79,10 +76,8 @@
             </div>
         </div>
 
-        <!-- BOARD -->
         <div id="board-zone" class="w-full my-8 flex flex-col gap-5 items-center justify-center"></div>
 
-        <!-- AI TERMINAL & CONTROLS -->
         <div id="control-zone" class="w-full flex flex-col gap-4 pb-2 px-2 items-center">
             
             <div class="flex flex-col items-center gap-3 w-full mb-1">
@@ -103,7 +98,6 @@
             <h3 id="modal-title" class="font-trad text-3xl font-bold text-amber-400 mb-3 drop-shadow-md">YES MY NAME IS</h3>
             <div id="modal-target" class="text-3xl font-regal font-bold tracking-widest text-[#02160b] mb-6 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 px-6 py-3 rounded-md border border-amber-100 w-full shadow-lg">NAKUL VEDANTH</div>
             
-            <!-- TABS (Visible only on win) -->
             <div id="victory-tabs" class="w-full flex border-b border-amber-800/40 mb-4 hidden">
                 <button id="tab-blessing-btn" onclick="switchTab('blessing')" class="flex-1 py-2 text-xs font-trad uppercase tracking-widest text-amber-400 border-b-2 border-amber-400 transition-all duration-500">Blessing 🪔</button>
                 <button id="tab-meaning-btn" onclick="switchTab('meaning')" class="flex-1 py-2 text-xs font-trad uppercase tracking-widest text-amber-600 border-b-2 border-transparent hover:text-amber-300 transition-all duration-500 relative">
@@ -115,7 +109,6 @@
                 </button>
             </div>
 
-            <!-- TAB CONTENT: BLESSING -->
             <div id="tab-blessing" class="w-full bg-[#02160b] border border-amber-800/60 p-4 mb-6 text-left min-h-[6rem] rounded-md relative">
                 <span class="font-trad text-[11px] text-amber-500/60 block border-b border-amber-800/40 pb-1 mb-2 uppercase tracking-widest">..</span>
                 <div id="ai-debrief-output" class="font-trad text-sm text-amber-50/90 italic leading-relaxed mb-4">
@@ -126,7 +119,6 @@
                 </button>
             </div>
 
-            <!-- TAB CONTENT: MEANING -->
             <div id="tab-meaning" class="hidden w-full bg-[#02160b] border border-amber-800/60 p-4 mb-6 text-left min-h-[6rem] max-h-[16rem] overflow-y-auto rounded-md relative shadow-inner">
                 <div class="mb-5">
                     <div class="flex items-center gap-2 mb-1">
@@ -163,29 +155,7 @@
         let mistakeCount = 0;
         let isGameOver = false;
         let isWin = false;
-        let bgMusic; // Ambient music reference
         
-        // --- AMBIENT BACKGROUND MUSIC ---
-        async function startAmbientMusic() {
-            await Tone.start();
-            bgMusic = new Tone.PolySynth(Tone.Synth, {
-                oscillator: { type: "triangle" },
-                envelope: { attack: 3, decay: 1, sustain: 0.8, release: 5 }
-            }).toDestination();
-            
-            bgMusic.volume.value = -24; // Smooth, low volume
-            
-            const notes = ["C3", "G3", "D4", "A3"];
-            const loop = new Tone.Loop((time) => {
-                const note = notes[Math.floor(Math.random() * notes.length)];
-                bgMusic.triggerAttackRelease(note, "2n", time);
-            }, "4n");
-            
-            Tone.Transport.start();
-            loop.start(0);
-        }
-
-        // --- ASTROLOGER CLUES & BLESSINGS ---
         const staticClues = [
             "  His first name belongs to the handsome and wise fourth Pandava.",
             "The stars whisper: His second name means the ultimate truth and culmination of the Vedas.",
@@ -195,7 +165,6 @@
         ];
         let currentClueIdx = 0;
 
-        // SLOW MOTION TYPEWRITER
         function typeWriterEffect(elementId, text, speed = 60) {
             const el = document.getElementById(elementId);
             el.innerHTML = "";
@@ -219,12 +188,9 @@
             const btn = document.getElementById('ai-hint-btn');
             btn.disabled = true;
             btn.classList.add('opacity-50');
-
             const clue = staticClues[currentClueIdx % staticClues.length];
             currentClueIdx++;
-            
             typeWriterEffect('ai-terminal-output', `"${clue}"`, 55);
-            
             setTimeout(() => {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50');
@@ -236,13 +202,10 @@
             btn.disabled = true;
             btn.innerText = "Listening...";
             btn.classList.add('opacity-50');
-
             const text = isWin 
                 ? "May the blessings of the cosmos and our ancestors forever protect little Nakul Vedanth. May his life be filled with profound wisdom, strength, and boundless joy."
                 : "Do not lose heart. The stars are simply testing our patience. The ceremony shall resume when the time is auspicious.";
-
             typeWriterEffect('ai-debrief-output', `"${text}"`, 60);
-            
             btn.innerText = "Blessing Received";
         }
 
@@ -256,17 +219,15 @@
         ];
 
         function startGame() {
-            startAmbientMusic(); // Start the background audio
-            
+            startAmbientMusic(); 
             const intro = document.getElementById('intro-zone');
             const game = document.getElementById('game-zone');
-            
             intro.style.opacity = '0';
             setTimeout(() => {
                 intro.classList.add('hidden');
                 game.classList.remove('hidden');
                 game.classList.add('flex');
-                void game.offsetWidth; // Trigger reflow
+                void game.offsetWidth;
                 game.style.opacity = '1';
                 initBoard(); 
                 initKeyboard();
@@ -297,26 +258,21 @@
             const kb = document.getElementById('keyboard'); kb.innerHTML = '';
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
                 const btn = document.createElement('button'); btn.innerText = l;
-                
                 let customStyle = "bg-[#042915] text-amber-100 font-outfit font-medium border border-amber-800/60 hover:bg-[#063b1e] hover:border-amber-500 active:scale-95 transition-all duration-700 shadow-sm";
-                
                 if (rightSet.has(l)) customStyle = "bg-amber-900/40 text-amber-500 border-amber-900 opacity-50 cursor-default scale-95";
                 if (wrongSet.has(l)) customStyle = "bg-red-950/40 text-red-800 border-red-950 opacity-30 cursor-default scale-95";
-
                 btn.className = `h-10 sm:h-11 rounded-md flex items-center justify-center ${customStyle}`;
-                
                 btn.onclick = () => {
                     if (isGameOver || rightSet.has(l) || wrongSet.has(l)) return;
-                    
                     if (uniqueChars.has(l)) {
                         rightSet.add(l);
+                        playCorrectSound();
                         const msg = document.getElementById('motivation');
                         msg.style.opacity = 0;
                         setTimeout(() => {
                             msg.innerText = `"${encouragements[Math.floor(Math.random() * encouragements.length)]}"`;
                             msg.style.opacity = 1;
                         }, 500);
-                        
                         confetti({ particleCount: 30, gravity: 0.3, spread: 80, ticks: 250, colors: ['#fef3c7', '#fbbf24', '#b45309'], origin: {y: 0.7} });
                         initBoard();
                         initKeyboard();
@@ -325,18 +281,15 @@
                         wrongSet.add(l);
                         mistakeCount++; 
                         document.getElementById('mistake-count').innerText = mistakeCount; 
-                        
                         document.body.style.transition = "transform 0.4s ease-in-out";
                         document.body.style.transform = "translate(3px, 2px)";
                         setTimeout(() => document.body.style.transform = "translate(0, 0)", 400);
-                        
                         const msg = document.getElementById('motivation');
                         msg.style.opacity = 0;
                         setTimeout(() => {
                             msg.innerText = '"A shadow falls. Tread carefully, child."';
                             msg.style.opacity = 1;
                         }, 500);
-
                         initKeyboard();
                         checkEndGame();
                     }
@@ -363,14 +316,10 @@
             const title = document.getElementById('modal-title');
             const target = document.getElementById('modal-target');
             const tabs = document.getElementById('victory-tabs');
-            
             if (isWin) {
                 title.innerText = "YES MY NAME IS";
-                title.className = "font-trad text-3xl font-bold text-amber-400 mb-3 drop-shadow-md";
-                target.className = "text-3xl font-regal font-bold tracking-widest text-[#02160b] mb-6 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 px-6 py-3 rounded-md border border-amber-100 w-full shadow-lg";
                 tabs.classList.remove('hidden');
                 switchTab('blessing');
-                
                 const duration = 3000;
                 const end = Date.now() + duration;
                 (function frame() {
@@ -384,77 +333,71 @@
                 target.classList.add('hidden');
                 tabs.classList.add('hidden');
                 switchTab('blessing');
-                
                 playBabyCry();
                 document.getElementById('ai-debrief-output').innerText = "The child has grown restless... Pacifying the baby and preparing to restart the ceremony.";
                 setTimeout(() => window.location.reload(), 4500);
             }
-            
             modal.classList.remove('hidden');
             setTimeout(() => modal.style.opacity = '1', 50);
         }
 
-        // --- SLOW MOTION GOLDEN FIREFLIES ANIMATION ---
         const canvas = document.getElementById('divine-sparks'); 
         const ctx = canvas.getContext('2d');
         let particles = [];
-
         function initParticles() {
             canvas.width = window.innerWidth; 
             canvas.height = window.innerHeight;
             particles = [];
             for(let i=0; i<35; i++) { 
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    radius: Math.random() * 2 + 0.5,
-                    speed: Math.random() * 0.3 + 0.1,
-                    alpha: Math.random() * 0.5 + 0.2
-                });
+                particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, radius: Math.random() * 2 + 0.5, speed: Math.random() * 0.3 + 0.1, alpha: Math.random() * 0.5 + 0.2 });
             }
         }
-        
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => {
                 ctx.fillStyle = `rgba(251, 191, 36, ${p.alpha})`;
-                ctx.beginPath(); 
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
                 p.y -= p.speed;
                 if(p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
             });
             requestAnimationFrame(draw);
         }
-        
         window.addEventListener('resize', initParticles);
         initParticles();
         draw();
 
-        // --- TONE.JS AUDIO SYNTHESIS FOR BABY CRY ---
         async function playBabyCry() {
             await Tone.start();
-            const synth = new Tone.Synth({
-                oscillator: { type: "fmsawtooth", modulationIndex: 2, modulationType: "triangle" },
-                envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1 }
-            }).toDestination();
-
+            const synth = new Tone.Synth({ oscillator: { type: "fmsawtooth", modulationIndex: 2, modulationType: "triangle" }, envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1 } }).toDestination();
             const vibrato = new Tone.Vibrato(6, 0.1).toDestination();
             synth.connect(vibrato);
-
             const now = Tone.now();
             synth.triggerAttackRelease("E5", "8n", now); synth.frequency.rampTo("C5", 0.3, now + 0.1);
             synth.triggerAttackRelease("Eb5", "8n", now + 0.8); synth.frequency.rampTo("B4", 0.3, now + 0.9);
             synth.triggerAttackRelease("E5", "2n", now + 1.6); synth.frequency.rampTo("A4", 0.8, now + 1.8);
         }
 
-        // TAB SWITCHING LOGIC
+        let chimeSynth;
+        async function playCorrectSound() {
+            await Tone.start();
+            if (!chimeSynth) {
+                chimeSynth = new Tone.Synth({
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 0.01, decay: 0.5, sustain: 0, release: 0.5 }
+                }).toDestination();
+                chimeSynth.volume.value = -10; // Soft volume for the chime
+            }
+            // Play a random magical pentatonic note
+            const notes = ["C6", "D6", "E6", "G6", "A6"];
+            const note = notes[Math.floor(Math.random() * notes.length)];
+            chimeSynth.triggerAttackRelease(note, "8n");
+        }
+
         function switchTab(tab) {
             const blessingBtn = document.getElementById('tab-blessing-btn');
             const meaningBtn = document.getElementById('tab-meaning-btn');
             const blessingTab = document.getElementById('tab-blessing');
             const meaningTab = document.getElementById('tab-meaning');
-
             if (tab === 'blessing') {
                 blessingTab.classList.remove('hidden'); meaningTab.classList.add('hidden');
                 blessingBtn.classList.add('text-amber-400', 'border-amber-400'); blessingBtn.classList.remove('text-amber-600', 'border-transparent');
@@ -464,6 +407,23 @@
                 meaningBtn.classList.add('text-amber-400', 'border-amber-400'); meaningBtn.classList.remove('text-amber-600', 'border-transparent');
                 blessingBtn.classList.add('text-amber-600', 'border-transparent'); blessingBtn.classList.remove('text-amber-400', 'border-amber-400');
             }
+        }
+        
+        let bgMusic;
+        async function startAmbientMusic() {
+            await Tone.start();
+            bgMusic = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "triangle" },
+                envelope: { attack: 3, decay: 1, sustain: 0.8, release: 5 }
+            }).toDestination();
+            bgMusic.volume.value = -24;
+            const notes = ["C3", "G3", "D4", "A3"];
+            const loop = new Tone.Loop((time) => {
+                const note = notes[Math.floor(Math.random() * notes.length)];
+                bgMusic.triggerAttackRelease(note, "2n", time);
+            }, "4n");
+            Tone.Transport.start();
+            loop.start(0);
         }
     </script>
 </body>
