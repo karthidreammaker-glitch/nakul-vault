@@ -18,54 +18,82 @@
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
     </style>
 </head>
-<body class="relative flex flex-col items-center justify-between min-h-screen p-3 sm:p-4 max-w-md mx-auto z-10">
+<body class="relative flex flex-col items-center justify-between min-h-screen p-3 max-w-md mx-auto">
+    <canvas id="dust" class="absolute inset-0 pointer-events-none z-0 opacity-50"></canvas>
 
-    <canvas id="marigold-dust" class="absolute inset-0 pointer-events-none z-0 opacity-75"></canvas>
+    <div id="intro-zone" class="my-auto w-full flex flex-col items-center text-center p-6">
+        <h1 class="font-regal text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-200 to-emerald-400 mb-4">THE NAME DROP</h1>
+        <button onclick="startGame()" class="w-32 h-32 rounded-full bg-gradient-to-b from-amber-300 to-amber-700 p-1 active:scale-95 transition">
+            <div class="w-full h-full rounded-full bg-[#051319] flex items-center justify-center font-regal text-[10px] font-black text-amber-200 uppercase">Start Reveal</div>
+        </button>
+    </div>
 
-    <div class="relative z-10 w-full flex flex-col items-center justify-between min-h-[95vh]">
-        
-        <!-- INTRO -->
-        <div id="intro-zone" class="my-auto w-full flex flex-col items-center justify-center text-center p-4">
-            <div class="inline-flex items-center gap-2 bg-teal-500/10 border border-teal-500/30 text-teal-300 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase mb-3 shadow-lg">
-                <span class="text-teal-400">🪔</span> ROYAL CEREMONY
-            </div>
-            <h1 class="font-regal text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-100 to-emerald-400 mb-2">THE NAME DROP</h1>
-            <p class="text-sm text-teal-100/90 mb-6">Our prince's official name is locked inside the royal vault. Open it to meet him.</p>
-            
-            <button onclick="startGame()" class="relative group w-36 h-36 rounded-full bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-1 shadow-[0_0_35px_rgba(6,182,212,0.4)] active:scale-95 transition-all">
-                <div class="w-full h-full rounded-full bg-[#051319] flex flex-col items-center justify-center border-2 border-amber-400/50 shadow-inner">
-                    <span class="font-regal text-[10px] font-black text-amber-200 uppercase">Start Reveal</span>
-                </div>
-            </button>
-        </div>
+    <div id="header-zone" class="hidden text-center pt-4">
+        <div class="text-teal-400 text-xs font-black uppercase tracking-widest">🦚 Royal Vault Engaged</div>
+        <h2 class="font-regal text-2xl font-black text-teal-100">Reveal The Name</h2>
+    </div>
 
-        <!-- MISSION CONTROL -->
-        <div id="header-zone" class="hidden text-center w-full pt-1">
-            <div class="inline-flex items-center gap-1.5 bg-teal-500/10 border border-teal-500/30 text-teal-300 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase shadow-inner">
-                <span class="text-teal-400">🦚</span> Royal Vault Engaged
-            </div>
-            <h2 class="font-regal text-2xl font-black text-teal-200 mt-1">Reveal The Name</h2>
-        </div>
+    <div id="board-zone" class="hidden flex-col gap-3 my-auto">
+        <div id="row-one" class="flex gap-2"></div>
+        <div id="row-two" class="flex gap-2"></div>
+    </div>
 
-        <!-- BOARD -->
-        <div id="board-zone" class="hidden w-full my-auto flex-col gap-3 items-center justify-center">
-            <div id="row-one" class="flex flex-row gap-2"></div>
-            <div id="row-two" class="flex flex-row gap-2"></div>
-        </div>
-
-        <!-- CONTROLS -->
-        <div id="control-zone" class="hidden w-full flex-col gap-2 pb-1 max-w-sm">
-            <button id="hint-btn" onclick="showHint()" class="w-full py-2 bg-[#0a222f] border border-teal-500/30 rounded-xl text-xs font-bold text-amber-400 shadow">
-                💡 Ask Royal Astrologer for Hint
-            </button>
-            <div id="keyboard" class="grid grid-cols-7 gap-1.5"></div>
-        </div>
+    <div id="control-zone" class="hidden w-full pb-6 px-4">
+        <div id="keyboard" class="grid grid-cols-7 gap-1"></div>
     </div>
 
     <script>
-        // ... (Keep existing JS logic here, just ensure the trigger labels are updated)
-        // Note: The board rendering and keyboard logic remains same, 
-        // just ensure you have the updated text labels in the IDs provided above.
+        const secretString = "NAKULVEDANTH";
+        let rightSet = new Set();
+        
+        function startGame() {
+            document.getElementById('intro-zone').classList.add('hidden');
+            document.getElementById('header-zone').classList.remove('hidden');
+            document.getElementById('board-zone').classList.remove('hidden');
+            document.getElementById('board-zone').classList.add('flex');
+            document.getElementById('control-zone').classList.remove('hidden');
+            document.getElementById('control-zone').classList.add('flex');
+            initBoard();
+            initKeyboard();
+        }
+
+        function renderRow(word, containerId) {
+            const row = document.getElementById(containerId); row.innerHTML = '';
+            word.split('').forEach(char => {
+                const isFound = rightSet.has(char);
+                const slot = document.createElement('div');
+                slot.className = 'perspective w-10 h-12 flex-shrink-0';
+                slot.innerHTML = `
+                    <div class="transform-3d relative w-full h-full rounded-xl shadow-lg ${isFound ? 'rotate-y-180' : ''}">
+                        <div class="backface-hidden absolute inset-0 bg-teal-900 border-2 border-teal-500 rounded-xl flex items-center justify-center text-cyan-400 font-bold">?</div>
+                        <div class="backface-hidden rotate-y-180 absolute inset-0 bg-amber-400 rounded-xl flex items-center justify-center text-slate-950 font-black text-2xl">${char}</div>
+                    </div>
+                `;
+                row.appendChild(slot);
+            });
+        }
+
+        function initBoard() {
+            renderRow("NAKUL", "row-one");
+            renderRow("VEDANTH", "row-two");
+        }
+
+        function initKeyboard() {
+            const kb = document.getElementById('keyboard'); kb.innerHTML = '';
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').sort(() => Math.random() - 0.5);
+            letters.forEach(l => {
+                const btn = document.createElement('button');
+                btn.innerText = l;
+                btn.className = "h-10 rounded bg-teal-950 text-teal-100 font-bold border border-teal-700 active:scale-90";
+                btn.onclick = () => {
+                    if(secretString.includes(l)) {
+                        rightSet.add(l);
+                        initBoard();
+                    }
+                };
+                kb.appendChild(btn);
+            });
+        }
     </script>
 </body>
 </html>
