@@ -3,125 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tactical Name Decryption</title>
+    <title>The Royal Namakaranam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700;800&family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Outfit:wght@300;400;600&display=swap');
         
         body { 
-            font-family: 'Rajdhani', sans-serif; 
-            background-color: #0a0a0c; 
-            color: #fff; 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #02160b; /* Deep Kerala Forest Green */
+            color: #fdfbf7; /* Kasavu Cream */
             overflow-x: hidden; 
             user-select: none; 
             margin:0; 
-            background-image: 
-                linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
-        
-        .scanlines {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            z-index: 50;
-            pointer-events: none;
+            background-image: radial-gradient(circle at center, #042915 0%, #02160b 100%);
         }
 
-        .font-hud { font-family: 'Share Tech Mono', monospace; }
+        .font-trad { font-family: 'Playfair Display', serif; }
         .perspective { perspective: 1000px; }
-        .transform-3d { transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        
+        /* SLOW MOTION 3D TRANSITION */
+        .transform-3d { 
+            transform-style: preserve-3d; 
+            transition: transform 1.8s cubic-bezier(0.25, 1, 0.5, 1); /* Very slow and graceful */
+        }
         .rotate-y-180 { transform: rotateY(180deg); }
         .backface-hidden { backface-visibility: hidden; }
-        .glitch-glow { box-shadow: 0 0 15px rgba(34, 211, 238, 0.6), inset 0 0 10px rgba(34, 211, 238, 0.3); }
         
-        /* Blinking cursor for the AI terminal */
+        .divine-glow { box-shadow: 0 0 25px rgba(251, 191, 36, 0.3), inset 0 0 15px rgba(251, 191, 36, 0.1); }
+        
+        /* Soft, slow blinking cursor */
         .cursor::after {
-            content: '█';
-            animation: blink 1s step-start infinite;
+            content: '🪔';
+            font-size: 0.8em;
+            margin-left: 4px;
+            animation: slow-blink 2s ease-in-out infinite;
         }
-        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes slow-blink { 
+            0%, 100% { opacity: 0.2; } 
+            50% { opacity: 1; transform: scale(1.1); } 
+        }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4 max-w-md mx-auto">
-    <div class="scanlines"></div>
-    <canvas id="data-sparks" class="absolute inset-0 pointer-events-none z-0 opacity-60"></canvas>
+    <!-- SLOW GOLDEN FIREFLIES / KANIKKONNA PETALS -->
+    <canvas id="divine-sparks" class="absolute inset-0 pointer-events-none z-0 opacity-70"></canvas>
 
     <!-- FRONT PAGE -->
-    <div id="intro-zone" class="text-center z-10 w-full">
-        <h1 class="font-hud text-3xl font-black text-cyan-400 mb-8 tracking-widest drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">MISSION: NAME DROP</h1>
+    <div id="intro-zone" class="text-center z-10 w-full transition-opacity duration-1000">
+        <h1 class="font-trad text-4xl font-bold text-amber-400 mb-10 tracking-widest drop-shadow-[0_4px_10px_rgba(251,191,36,0.4)]">FIND<br>THE<br>NAME</h1>
         
-        <button onclick="startGame()" class="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-400 to-blue-800 p-1 shadow-[0_0_30px_rgba(34,211,238,0.5)] active:scale-95 transition">
-            <div class="w-full h-full rounded-full bg-[#0a0a0c] flex items-center justify-center border-2 border-cyan-500 glitch-glow">
-                <span class="font-hud text-sm font-black text-cyan-300 uppercase tracking-widest animate-pulse">INITIATE</span>
+        <button onclick="startGame()" class="w-36 h-36 rounded-full bg-gradient-to-br from-amber-200 to-amber-600 p-1.5 shadow-[0_0_40px_rgba(251,191,36,0.3)] active:scale-95 transition-all duration-700">
+            <div class="w-full h-full rounded-full bg-[#032010] flex items-center justify-center border border-amber-500/50 divine-glow">
+                <span class="font-trad text-lg font-bold text-amber-200 uppercase tracking-widest">Seek<br>Blessings</span>
             </div>
         </button>
     </div>
 
     <!-- GAME UI -->
-    <div id="game-zone" class="hidden w-full z-10 flex-col items-center justify-between min-h-[90vh]">
+    <div id="game-zone" class="hidden w-full z-10 flex-col items-center justify-between min-h-[90vh] opacity-0 transition-opacity duration-1000">
         
         <div class="text-center w-full pt-2">
-            <span class="bg-rose-900/40 border border-rose-500 text-rose-400 px-4 py-1 rounded-sm text-[10px] font-hud font-black uppercase tracking-widest">⚠️ UPLINK ESTABLISHED</span>
-            <h2 class="font-hud text-2xl font-black mt-3 text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">DECRYPT THE TARGET</h2>
+            <span class="bg-amber-900/40 border border-amber-500/50 text-amber-300 px-4 py-1.5 rounded-full text-xs font-trad italic tracking-widest shadow-inner">🪔 The Ceremony Commences</span>
+            <h2 class="font-trad text-2xl font-bold mt-4 text-amber-50 drop-shadow-md">Reveal The Divine Name</h2>
             
             <!-- SYSTEM STATUS -->
-            <div id="motivation" class="mt-2 text-xs font-hud text-cyan-500/80 font-medium h-4 uppercase tracking-wider">
-                > SYSTEM ONLINE. AWAITING INPUT...
+            <div id="motivation" class="mt-4 text-sm font-trad italic text-amber-200/80 font-medium h-4 tracking-wide transition-all duration-1000">
+                "May the wisdom of the ancestors guide you."
             </div>
             
-            <div class="flex justify-center gap-4 mt-3 text-xs font-bold text-slate-400 bg-slate-900/80 border border-slate-700 py-1.5 px-4 mx-auto w-max rounded-sm">
-                <span>HAZARD LEVEL: <span id="mistake-count" class="text-rose-500 text-sm ml-1 drop-shadow-[0_0_5px_rgba(244,63,94,0.8)]">0</span> <span class="text-slate-500 text-[10px]">/ 5</span></span>
+            <div class="flex justify-center gap-4 mt-6 text-xs text-amber-100/70 bg-[#042915]/80 border border-amber-700/30 py-2 px-6 mx-auto w-max rounded-full shadow-lg">
+                <span class="tracking-widest uppercase">Missteps Allowed: <span id="mistake-count" class="text-red-400 text-sm font-bold ml-1 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]">0</span> <span class="text-amber-700 font-bold">/ 5</span></span>
             </div>
         </div>
 
         <!-- BOARD -->
-        <div id="board-zone" class="w-full my-6 flex flex-col gap-4 items-center justify-center"></div>
+        <div id="board-zone" class="w-full my-8 flex flex-col gap-5 items-center justify-center"></div>
 
         <!-- AI TERMINAL & CONTROLS -->
-        <div id="control-zone" class="w-full flex flex-col gap-3 pb-2 px-2">
+        <div id="control-zone" class="w-full flex flex-col gap-4 pb-2 px-2">
             
-            <!-- AI TERMINAL BOX -->
-            <div class="bg-black/80 border border-cyan-800/50 p-3 rounded shadow-inner min-h-[4.5rem] flex flex-col">
-                <div class="flex justify-between items-center mb-1 border-b border-cyan-900 pb-1">
-                    <span class="font-hud text-[10px] text-cyan-600">SYS.AI.UPLINK</span>
-                    <button id="ai-hint-btn" onclick="requestAIIntel()" class="font-hud text-[10px] bg-cyan-900/30 hover:bg-cyan-800 text-cyan-300 px-2 py-0.5 rounded border border-cyan-700 transition active:scale-95">
-                        REQUEST AI INTEL ✨
+            <!-- ASTROLOGER BOX -->
+            <div class="bg-[#02160b]/90 border border-amber-600/40 p-4 rounded-lg shadow-inner min-h-[5.5rem] flex flex-col divine-glow relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
+                <div class="flex justify-between items-center mb-2 border-b border-amber-800/50 pb-2">
+                    <span class="font-trad text-xs text-amber-500/80 italic">The Royal Astrologer (Prasnam)</span>
+                    <button id="ai-hint-btn" onclick="requestAIIntel()" class="font-trad text-[11px] font-bold bg-amber-900/30 hover:bg-amber-800/60 text-amber-200 px-3 py-1 rounded-full border border-amber-700/60 transition-all duration-500 active:scale-95 shadow">
+                        Ask For Guidance ✨
                     </button>
                 </div>
-                <div id="ai-terminal-output" class="font-hud text-[11px] text-cyan-400 leading-tight">
-                    > Standby for operative input. Use keys below to decrypt.
+                <div id="ai-terminal-output" class="font-trad text-sm text-amber-100/90 leading-relaxed italic">
+                    "Offer a letter to the sacred fire..."
                 </div>
             </div>
 
-            <div id="keyboard" class="grid grid-cols-7 gap-1.5"></div>
+            <div id="keyboard" class="grid grid-cols-7 gap-2"></div>
         </div>
     </div>
 
     <!-- POST-MISSION MODAL -->
-    <div id="post-mission-modal" class="hidden fixed inset-0 z-40 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-[#0a0a0c] border border-cyan-500 p-6 w-full max-w-sm rounded shadow-[0_0_40px_rgba(34,211,238,0.2)] glitch-glow flex flex-col items-center text-center">
+    <div id="post-mission-modal" class="hidden fixed inset-0 z-40 bg-[#02160b]/95 backdrop-blur-md flex items-center justify-center p-4 opacity-0 transition-opacity duration-1000">
+        <div class="bg-[#032010] border border-amber-500 p-8 w-full max-w-sm rounded-xl shadow-[0_0_50px_rgba(251,191,36,0.15)] divine-glow flex flex-col items-center text-center">
             
-            <h3 id="modal-title" class="font-hud text-3xl font-black text-cyan-400 mb-2">MISSION ACCOMPLISHED</h3>
-            <div id="modal-target" class="text-2xl font-black tracking-widest text-white mb-4 bg-slate-900 px-4 py-2 border border-slate-700 w-full">NAKUL VEDANTH</div>
+            <h3 id="modal-title" class="font-trad text-3xl font-bold text-amber-400 mb-3 drop-shadow-md">AUSPICIOUS REVELATION</h3>
+            <div id="modal-target" class="text-3xl font-trad font-bold tracking-widest text-[#02160b] mb-6 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 px-6 py-3 rounded-md border border-amber-100 w-full shadow-lg">NAKUL VEDANTH</div>
             
-            <!-- AI Debrief Area -->
-            <div class="w-full bg-black border border-slate-800 p-3 mb-4 text-left min-h-[5rem]">
-                <span class="font-hud text-[10px] text-slate-500 block border-b border-slate-800 pb-1 mb-1">COMMAND DEBRIEF [AI GENERATED]</span>
-                <div id="ai-debrief-output" class="font-hud text-xs text-slate-300">
-                    > Awaiting debrief generation...
+            <!-- TABS (Visible only on win) -->
+            <div id="victory-tabs" class="w-full flex border-b border-amber-800/40 mb-4 hidden">
+                <button id="tab-blessing-btn" onclick="switchTab('blessing')" class="flex-1 py-2 text-xs font-trad uppercase tracking-widest text-amber-400 border-b-2 border-amber-400 transition-all duration-500">Blessing 🪔</button>
+                <button id="tab-meaning-btn" onclick="switchTab('meaning')" class="flex-1 py-2 text-xs font-trad uppercase tracking-widest text-amber-600 border-b-2 border-transparent hover:text-amber-300 transition-all duration-500 relative">
+                    Meaning 📜
+                    <!-- Glowing notification dot -->
+                    <span class="absolute top-1 right-4 flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                    </span>
+                </button>
+            </div>
+
+            <!-- TAB CONTENT: BLESSING -->
+            <div id="tab-blessing" class="w-full bg-[#02160b] border border-amber-800/60 p-4 mb-6 text-left min-h-[6rem] rounded-md relative">
+                <span class="font-trad text-[11px] text-amber-500/60 block border-b border-amber-800/40 pb-1 mb-2 uppercase tracking-widest">Karnavar's Words</span>
+                <div id="ai-debrief-output" class="font-trad text-sm text-amber-50/90 italic leading-relaxed mb-4">
+                    "Awaiting the elder's voice..."
+                </div>
+                <button id="ai-debrief-btn" onclick="generateDebrief()" class="w-full font-outfit text-xs font-semibold bg-amber-900/40 hover:bg-amber-800/60 text-amber-200 py-2.5 rounded border border-amber-700/60 transition-all duration-500 active:scale-95 shadow">
+                    Receive Blessing 🪔
+                </button>
+            </div>
+
+            <!-- TAB CONTENT: MEANING -->
+            <div id="tab-meaning" class="hidden w-full bg-[#02160b] border border-amber-800/60 p-4 mb-6 text-left min-h-[6rem] max-h-[16rem] overflow-y-auto rounded-md relative shadow-inner">
+                <div class="mb-5">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="font-trad text-lg text-amber-300 font-bold drop-shadow-sm">NAKUL</span>
+                        <span class="text-sm text-amber-500/90 font-medium tracking-wide">(നകുൽ)</span>
+                    </div>
+                    <span class="font-trad text-[11px] italic text-amber-500/80 block mb-1.5">"The handsome and wise"</span>
+                    <span class="font-outfit text-[11px] text-amber-50/90 leading-relaxed block mb-1.5">The fourth Pandava prince. A name symbolizing profound wisdom, extraordinary grace, and a deep connection with nature.</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="font-trad text-lg text-amber-300 font-bold drop-shadow-sm">VEDANTH</span>
+                        <span class="text-sm text-amber-500/90 font-medium tracking-wide">(വേദാന്ത്)</span>
+                    </div>
+                    <span class="font-trad text-[11px] italic text-amber-500/80 block mb-1.5">"The ultimate truth"</span>
+                    <span class="font-outfit text-[11px] text-amber-50/90 leading-relaxed block mb-1.5">The culmination of Vedic knowledge. It represents supreme spiritual wisdom, enlightenment, and the absolute cosmic reality.</span>
                 </div>
             </div>
 
-            <div class="flex gap-2 w-full">
-                <button onclick="window.location.reload()" class="flex-1 font-hud text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded border border-slate-600 transition active:scale-95">
-                    REBOOT SYS
-                </button>
-                <button id="ai-debrief-btn" onclick="generateDebrief()" class="flex-1 font-hud text-xs font-bold bg-cyan-900/40 hover:bg-cyan-800 text-cyan-300 py-3 rounded border border-cyan-600 transition active:scale-95">
-                    GET DEBRIEF ✨
+            <div class="flex gap-3 w-full">
+                <button onclick="window.location.reload()" class="flex-1 font-outfit text-xs font-semibold bg-[#032010] hover:bg-[#042915] text-amber-400/80 py-3.5 rounded-lg border border-amber-800 transition-all duration-500 active:scale-95">
+                    Return to Mandapam
                 </button>
             </div>
         </div>
@@ -163,10 +196,11 @@
                     await new Promise(r => setTimeout(r, delay));
                 }
             }
-            return "> ERROR: ENCRYPTION TOO STRONG. CONNECTION TO 'OVERSEER' LOST.";
+            return "Alas, the stars are clouded today. The cosmic connection is lost.";
         }
 
-        function typeWriterEffect(elementId, text, speed = 25) {
+        // SLOW MOTION TYPEWRITER
+        function typeWriterEffect(elementId, text, speed = 60) {
             const el = document.getElementById(elementId);
             el.innerHTML = "";
             el.classList.add('cursor');
@@ -176,7 +210,7 @@
                 if (i < text.length) {
                     el.innerHTML = text.substring(0, i+1);
                     i++;
-                    setTimeout(type, speed);
+                    setTimeout(type, speed); // Slowed down from 25 to 60
                 } else {
                     el.classList.remove('cursor');
                 }
@@ -188,72 +222,83 @@
             if (isGameOver) return;
             const btn = document.getElementById('ai-hint-btn');
             btn.disabled = true;
-            btn.innerText = "PROCESSING...";
+            btn.innerText = "Consulting the stars...";
             btn.classList.add('opacity-50');
 
-            typeWriterEffect('ai-terminal-output', "> ESTABLISHING NEURAL LINK TO 'OVERSEER' AI...");
+            typeWriterEffect('ai-terminal-output', "Looking deeply into the cowrie shells (Prasnam)...", 50);
 
             const foundLetters = Array.from(rightSet).join(', ') || "none";
-            const prompt = `The target payload is 'NAKULVEDANTH'. The operative has currently decrypted these letters: [${foundLetters}]. Provide a short, cryptic, 1-2 sentence tactical hint to help them guess ONE of the remaining letters. Do NOT explicitly state the missing letter. Do NOT give away the full name. Use a gritty, cyberpunk hacker AI voice.`;
-            const sysInst = "You are OVERSEER, a rogue tactical AI assisting a hacker.";
+            const prompt = `The sacred name is 'NAKULVEDANTH'. The seeker has revealed these letters: [${foundLetters}]. Provide a slow, poetic, highly traditional 1-2 sentence hint to help them guess ONE of the remaining letters. Do NOT explicitly state the missing letter or full name. Speak gently.`;
+            const sysInst = "You are a wise, elderly Kerala Astrologer (Karnavar) presiding over a Namakaranam ceremony. You speak with deep spiritual resonance, referencing nature, gods, and tradition.";
 
             const responseText = await fetchGemini(prompt, sysInst);
             
-            typeWriterEffect('ai-terminal-output', `> ${responseText}`);
+            typeWriterEffect('ai-terminal-output', `"${responseText}"`, 60);
             
             btn.disabled = false;
-            btn.innerText = "REQUEST AI INTEL ✨";
+            btn.innerText = "Ask For Guidance ✨";
             btn.classList.remove('opacity-50');
         }
 
         async function generateDebrief() {
             const btn = document.getElementById('ai-debrief-btn');
             btn.disabled = true;
-            btn.innerText = "LINKING...";
+            btn.innerText = "Listening...";
             btn.classList.add('opacity-50');
 
-            typeWriterEffect('ai-debrief-output', "> COMPILING MISSION DATA...");
+            typeWriterEffect('ai-debrief-output', "The elder raises a hand to speak...", 50);
 
-            const status = isWin ? "SUCCESS" : "FAILED (LOCKED OUT)";
-            const prompt = `Mission status: ${status}. Target Name: 'NAKULVEDANTH'. Mistakes made: ${mistakeCount}/5. Write a short, punchy 2-3 sentence performance evaluation for the operative from 'COMMAND'. Use gritty cyberpunk military terminology. Acknowledge their specific mistake count.`;
-            const sysInst = "You are COMMAND, a hardened cyberpunk military officer writing a post-mission report.";
+            const status = isWin ? "SUCCESS" : "FAILED";
+            const prompt = `Ceremony status: ${status}. Baby Name: 'NAKULVEDANTH'. Missteps: ${mistakeCount}/5. Write a short, gentle 2-3 sentence blessing (or poetic consolation if failed) for the family. Acknowledge their effort.`;
+            const sysInst = "You are a revered, loving Kerala family elder (Karnavar) concluding a Namakaranam. Your words are warm, full of blessings, and steeped in tradition.";
 
             const responseText = await fetchGemini(prompt, sysInst);
             
-            typeWriterEffect('ai-debrief-output', `> ${responseText}`);
+            typeWriterEffect('ai-debrief-output', `"${responseText}"`, 60);
             
-            btn.innerText = "REPORT LOGGED";
+            btn.innerText = "Blessing Received";
         }
-        // --- END GEMINI INTEGRATION ---
 
         const encouragements = [
-            "> FIREWALL 10% BREACHED.",
-            "> DIRECT HIT. CONTINUING SCAN.",
-            "> SECURITY LAYER BYPASSED.",
-            "> TARGET ACQUIRING...",
-            "> SYSTEM DESTABILIZING.",
-            "> CORE EXPOSED."
+            "An auspicious choice. The path clears.",
+            "The ancestors smile upon this letter.",
+            "Harmony is restored. Continue gently.",
+            "The sacred syllables reveal themselves.",
+            "A beautiful step toward the truth.",
+            "The divine light shines brighter."
         ];
 
         function startGame() {
-            document.getElementById('intro-zone').classList.add('hidden');
-            document.getElementById('game-zone').classList.remove('hidden');
-            document.getElementById('game-zone').classList.add('flex');
-            initBoard(); initKeyboard();
+            const intro = document.getElementById('intro-zone');
+            const game = document.getElementById('game-zone');
+            
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.classList.add('hidden');
+                game.classList.remove('hidden');
+                game.classList.add('flex');
+                // Trigger reflow
+                void game.offsetWidth;
+                game.style.opacity = '1';
+                initBoard(); 
+                initKeyboard();
+            }, 1000); // Slow fade out
         }
 
         function initBoard() {
             const dock = document.getElementById('board-zone'); dock.innerHTML = '';
             words.forEach(word => {
-                const row = document.createElement('div'); row.className = 'flex gap-2 justify-center';
+                const row = document.createElement('div'); row.className = 'flex gap-2.5 justify-center';
                 word.split('').forEach(char => {
                     const isFound = rightSet.has(char);
                     const slot = document.createElement('div');
-                    slot.className = 'perspective w-10 h-12 sm:w-12 sm:h-14 flex-shrink-0';
+                    slot.className = 'perspective w-11 h-14 sm:w-14 sm:h-16 flex-shrink-0';
                     slot.innerHTML = `
-                        <div class="transform-3d relative w-full h-full shadow-lg ${isFound || (isGameOver && !isWin) ? 'rotate-y-180' : ''}">
-                            <div class="backface-hidden absolute inset-0 bg-[#0f172a] border border-cyan-900 flex items-center justify-center text-cyan-800 font-hud font-black text-xl sm:text-2xl">[?]</div>
-                            <div class="backface-hidden rotate-y-180 absolute inset-0 ${isGameOver && !isWin && !isFound ? 'bg-rose-900 border-rose-500 text-rose-300' : 'bg-cyan-400 border-cyan-200 text-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.6)]'} border flex items-center justify-center font-hud font-black text-xl sm:text-2xl">${char}</div>
+                        <div class="transform-3d relative w-full h-full shadow-lg rounded-md ${isFound || (isGameOver && !isWin) ? 'rotate-y-180' : ''}">
+                            <!-- UNREVEALED: Deep Green & Gold border -->
+                            <div class="backface-hidden absolute inset-0 bg-[#042915] border-2 border-amber-600/70 rounded-md flex items-center justify-center text-amber-500/30 font-trad font-bold text-2xl">?</div>
+                            <!-- REVEALED: Cream/Gold Text -->
+                            <div class="backface-hidden rotate-y-180 absolute inset-0 ${isGameOver && !isWin && !isFound ? 'bg-red-950 border-red-800 text-red-300' : 'bg-gradient-to-br from-amber-50 to-amber-200 border-2 border-amber-400 text-[#02160b] shadow-[0_0_20px_rgba(251,191,36,0.4)]'} rounded-md flex items-center justify-center font-trad font-bold text-2xl sm:text-3xl">${char}</div>
                         </div>
                     `;
                     row.appendChild(slot);
@@ -267,19 +312,27 @@
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
                 const btn = document.createElement('button'); btn.innerText = l;
                 
-                let customStyle = "bg-slate-900 text-slate-300 font-hud font-bold border border-slate-700 active:scale-95 transition-colors";
-                if (rightSet.has(l)) customStyle = "bg-cyan-900/50 text-cyan-500 border-cyan-800 opacity-50 cursor-default scale-95";
-                if (wrongSet.has(l)) customStyle = "bg-rose-900/30 text-rose-700 border-rose-900 opacity-30 cursor-default scale-95";
+                let customStyle = "bg-[#042915] text-amber-100 font-outfit font-medium border border-amber-800/60 hover:bg-[#063b1e] hover:border-amber-500 active:scale-95 transition-all duration-700 shadow-sm";
+                
+                if (rightSet.has(l)) customStyle = "bg-amber-900/40 text-amber-500 border-amber-900 opacity-50 cursor-default scale-95";
+                if (wrongSet.has(l)) customStyle = "bg-red-950/40 text-red-800 border-red-950 opacity-30 cursor-default scale-95";
 
-                btn.className = `h-10 sm:h-11 rounded-sm flex items-center justify-center ${customStyle}`;
+                btn.className = `h-10 sm:h-11 rounded-md flex items-center justify-center ${customStyle}`;
                 
                 btn.onclick = () => {
                     if (isGameOver || rightSet.has(l) || wrongSet.has(l)) return;
                     
                     if (uniqueChars.has(l)) {
                         rightSet.add(l);
-                        document.getElementById('motivation').innerText = `${encouragements[Math.floor(Math.random() * encouragements.length)]}`;
-                        confetti({ particleCount: 20, gravity: 0.8, colors: ['#22d3ee', '#ffffff', '#0ea5e9'], origin: {y: 0.8} });
+                        const msg = document.getElementById('motivation');
+                        msg.style.opacity = 0;
+                        setTimeout(() => {
+                            msg.innerText = `"${encouragements[Math.floor(Math.random() * encouragements.length)]}"`;
+                            msg.style.opacity = 1;
+                        }, 500); // Slow text fade
+                        
+                        // SLOW MOTION CONFETTI
+                        confetti({ particleCount: 30, gravity: 0.3, spread: 80, ticks: 250, colors: ['#fef3c7', '#fbbf24', '#b45309'], origin: {y: 0.7} });
                         initBoard();
                         initKeyboard();
                         checkEndGame();
@@ -287,8 +340,19 @@
                         wrongSet.add(l);
                         mistakeCount++; 
                         document.getElementById('mistake-count').innerText = mistakeCount; 
-                        document.body.style.transform = "translate(5px, 5px)";
-                        setTimeout(() => document.body.style.transform = "translate(0, 0)", 50);
+                        
+                        // Gentle, slow screen shake
+                        document.body.style.transition = "transform 0.4s ease-in-out";
+                        document.body.style.transform = "translate(3px, 2px)";
+                        setTimeout(() => document.body.style.transform = "translate(0, 0)", 400);
+                        
+                        const msg = document.getElementById('motivation');
+                        msg.style.opacity = 0;
+                        setTimeout(() => {
+                            msg.innerText = '"A shadow falls. Tread carefully, child."';
+                            msg.style.opacity = 1;
+                        }, 500);
+
                         initKeyboard();
                         checkEndGame();
                     }
@@ -301,12 +365,12 @@
             if (rightSet.size === uniqueChars.size) {
                 isGameOver = true;
                 isWin = true;
-                setTimeout(showPostMissionModal, 800);
+                setTimeout(showPostMissionModal, 2000); // Extra long delay to let the final slow flip finish
             } else if (mistakeCount >= 5) {
                 isGameOver = true;
                 isWin = false;
-                initBoard(); // Reveal remaining tiles in red
-                setTimeout(showPostMissionModal, 1000);
+                initBoard(); 
+                setTimeout(showPostMissionModal, 2500);
             }
         }
 
@@ -314,40 +378,117 @@
             const modal = document.getElementById('post-mission-modal');
             const title = document.getElementById('modal-title');
             const target = document.getElementById('modal-target');
+            const tabs = document.getElementById('victory-tabs');
             
             if (isWin) {
-                title.innerText = "MISSION ACCOMPLISHED";
-                title.className = "font-hud text-3xl font-black text-cyan-400 mb-2";
-                modal.querySelector('div').className = "bg-[#0a0a0c] border border-cyan-500 p-6 w-full max-w-sm rounded shadow-[0_0_40px_rgba(34,211,238,0.2)] glitch-glow flex flex-col items-center text-center";
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                title.innerText = "AUSPICIOUS REVELATION";
+                title.className = "font-trad text-3xl font-bold text-amber-400 mb-3 drop-shadow-md";
+                target.className = "text-3xl font-trad font-bold tracking-widest text-[#02160b] mb-6 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 px-6 py-3 rounded-md border border-amber-100 w-full shadow-lg";
+                tabs.classList.remove('hidden');
+                switchTab('blessing');
+                
+                // Slow motion victory shower
+                const duration = 3000;
+                const end = Date.now() + duration;
+                (function frame() {
+                    confetti({
+                        particleCount: 3,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#fbbf24', '#fef3c7'],
+                        gravity: 0.4,
+                        ticks: 300
+                    });
+                    confetti({
+                        particleCount: 3,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#fbbf24', '#fef3c7'],
+                        gravity: 0.4,
+                        ticks: 300
+                    });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                }());
             } else {
-                title.innerText = "SYSTEM LOCKED";
-                title.className = "font-hud text-3xl font-black text-rose-500 mb-2 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]";
-                target.innerText = "DECRYPTION FAILED";
-                target.className = "text-xl font-black tracking-widest text-rose-300 mb-4 bg-rose-950 px-4 py-2 border border-rose-800 w-full";
-                modal.querySelector('div').className = "bg-[#0a0a0c] border border-rose-600 p-6 w-full max-w-sm rounded shadow-[0_0_40px_rgba(225,29,72,0.3)] flex flex-col items-center text-center";
+                title.innerText = "THE DOORS CLOSE";
+                title.className = "font-trad text-3xl font-bold text-red-500 mb-3 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]";
+                target.innerText = "CEREMONY HALTED";
+                target.className = "text-2xl font-trad font-bold tracking-widest text-red-200 mb-6 bg-red-950 px-6 py-3 rounded-md border border-red-800 w-full shadow-lg";
+                tabs.classList.add('hidden');
+                switchTab('blessing'); // Lock to blessing tab if failed
             }
             
             modal.classList.remove('hidden');
+            // Trigger fade in
+            setTimeout(() => modal.style.opacity = '1', 50);
         }
 
-        // --- BACKGROUND ANIMATION ---
-        const canvas = document.getElementById('data-sparks'); 
+        // --- SLOW MOTION GOLDEN FIREFLIES ANIMATION ---
+        const canvas = document.getElementById('divine-sparks'); 
         const ctx = canvas.getContext('2d');
-        function draw() {
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for(let i=0; i<40; i++) { 
-                    ctx.fillStyle = Math.random() > 0.3 ? "#22d3ee" : "#f43f5e"; 
-                    ctx.beginPath(); 
-                    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 2, Math.random() * 15 + 5); 
-                }
-                requestAnimationFrame(animate);
+        let particles = [];
+
+        function initParticles() {
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<35; i++) { 
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 0.5,
+                    speed: Math.random() * 0.3 + 0.1, // Very slow drift
+                    alpha: Math.random() * 0.5 + 0.2
+                });
             }
-            animate();
         }
+        
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.fillStyle = `rgba(251, 191, 36, ${p.alpha})`; // Amber/Gold color
+                ctx.beginPath(); 
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                p.y -= p.speed;
+                if(p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+            });
+            requestAnimationFrame(draw);
+        }
+        
+        window.addEventListener('resize', initParticles);
+        initParticles();
         draw();
+
+        // TAB SWITCHING LOGIC
+        function switchTab(tab) {
+            const blessingBtn = document.getElementById('tab-blessing-btn');
+            const meaningBtn = document.getElementById('tab-meaning-btn');
+            const blessingTab = document.getElementById('tab-blessing');
+            const meaningTab = document.getElementById('tab-meaning');
+
+            if (tab === 'blessing') {
+                blessingTab.classList.remove('hidden');
+                meaningTab.classList.add('hidden');
+                
+                blessingBtn.classList.add('text-amber-400', 'border-amber-400');
+                blessingBtn.classList.remove('text-amber-600', 'border-transparent');
+                
+                meaningBtn.classList.add('text-amber-600', 'border-transparent');
+                meaningBtn.classList.remove('text-amber-400', 'border-amber-400');
+            } else {
+                blessingTab.classList.add('hidden');
+                meaningTab.classList.remove('hidden');
+                
+                meaningBtn.classList.add('text-amber-400', 'border-amber-400');
+                meaningBtn.classList.remove('text-amber-600', 'border-transparent');
+                
+                blessingBtn.classList.add('text-amber-600', 'border-transparent');
+                blessingBtn.classList.remove('text-amber-400', 'border-amber-400');
+            }
+        }
     </script>
 </body>
 </html>
