@@ -53,7 +53,7 @@
 
     <!-- FRONT PAGE -->
     <div id="intro-zone" class="text-center z-10 w-full transition-opacity duration-1000">
-        <h1 class="font-trad text-4xl font-bold text-amber-400 mb-10 tracking-widest drop-shadow-[0_4px_10px_rgba(251,191,36,0.4)]">FIND<br>MY<br>NAME</h1>
+        <h1 class="font-trad text-4xl font-bold text-amber-400 mb-10 tracking-widest drop-shadow-[0_4px_10px_rgba(251,191,36,0.4)]">FIND<br>MY NAME</h1>
         
         <button onclick="startGame()" class="w-36 h-36 rounded-full bg-gradient-to-br from-amber-200 to-amber-600 p-1.5 shadow-[0_0_40px_rgba(251,191,36,0.3)] active:scale-95 transition-all duration-700">
             <div class="w-full h-full rounded-full bg-[#032010] flex items-center justify-center border border-amber-500/50 divine-glow">
@@ -100,7 +100,7 @@
     <div id="post-mission-modal" class="hidden fixed inset-0 z-40 bg-[#02160b]/95 backdrop-blur-md flex items-center justify-center p-4 opacity-0 transition-opacity duration-1000">
         <div class="bg-[#032010] border border-amber-500 p-8 w-full max-w-sm rounded-xl shadow-[0_0_50px_rgba(251,191,36,0.15)] divine-glow flex flex-col items-center text-center">
             
-            <h3 id="modal-title" class="font-trad text-3xl font-bold text-amber-400 mb-3 drop-shadow-md">YES, MY NAME IS</h3>
+            <h3 id="modal-title" class="font-trad text-3xl font-bold text-amber-400 mb-3 drop-shadow-md">YES MY NAME IS</h3>
             <div id="modal-target" class="text-3xl font-regal font-bold tracking-widest text-[#02160b] mb-6 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 px-6 py-3 rounded-md border border-amber-100 w-full shadow-lg">NAKUL VEDANTH</div>
             
             <!-- TABS (Visible only on win) -->
@@ -167,7 +167,7 @@
         
         // --- ASTROLOGER CLUES & BLESSINGS ---
         const staticClues = [
-            " His first name belongs to the handsome and wise fourth Pandava.",
+            "Prasnam reveals: His first name belongs to the handsome and wise fourth Pandava.",
             "The stars whisper: His second name means the ultimate truth and culmination of the Vedas.",
             "Look closely: The letter 'N' appears twice in this sacred arrangement.",
             "A celestial hint: There are exactly four unique vowels waiting to be found.",
@@ -348,7 +348,7 @@
             const tabs = document.getElementById('victory-tabs');
             
             if (isWin) {
-                title.innerText = "AUSPICIOUS REVELATION";
+                title.innerText = "YES MY NAME IS";
                 title.className = "font-trad text-3xl font-bold text-amber-400 mb-3 drop-shadow-md";
                 target.className = "text-3xl font-regal font-bold tracking-widest text-[#02160b] mb-6 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 px-6 py-3 rounded-md border border-amber-100 w-full shadow-lg";
                 tabs.classList.remove('hidden');
