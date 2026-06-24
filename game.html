@@ -15,24 +15,32 @@
         .backface-hidden { backface-visibility: hidden; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-between min-h-screen p-4 max-w-md mx-auto">
+<body class="flex flex-col items-center justify-center min-h-screen p-4 max-w-md mx-auto">
 
-    <!-- HEADER -->
-    <div id="header-zone" class="text-center w-full pt-4">
-        <span class="bg-teal-500/10 border border-teal-500/30 text-teal-400 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase">Royal Vault Engaged</span>
-        <h1 class="text-2xl font-black mt-3 text-white tracking-widest">THE NAME DROP</h1>
-        <div class="flex justify-center items-center gap-6 mt-3 text-xs font-bold text-teal-200/60">
-            <span>Mistakes: <span id="mistake-count" class="text-rose-400">0</span></span>
-            <span>Gifts: <span id="gift-count" class="text-amber-400">0</span>/10</span>
-        </div>
+    <!-- FRONT PAGE -->
+    <div id="intro-zone" class="text-center">
+        <h1 class="text-3xl font-black text-white mb-8">THE NAME DROP</h1>
+        <button onclick="startGame()" class="w-32 h-32 rounded-full bg-gradient-to-b from-amber-300 to-amber-700 p-1 active:scale-95 transition shadow-2xl">
+            <div class="w-full h-full rounded-full bg-[#051319] flex items-center justify-center font-black text-xs text-amber-200">ENTER</div>
+        </button>
     </div>
 
-    <!-- BOARD -->
-    <div id="board-zone" class="w-full my-auto flex flex-col gap-4 items-center justify-center py-6"></div>
+    <!-- GAME UI (HIDDEN BY DEFAULT) -->
+    <div id="game-zone" class="hidden w-full">
+        <div id="header-zone" class="text-center w-full pt-4">
+            <span class="bg-teal-500/10 border border-teal-500/30 text-teal-400 px-4 py-1 rounded-full text-xs font-black uppercase">Royal Vault Engaged</span>
+            <h1 class="text-2xl font-black mt-3 text-white tracking-widest">THE NAME DROP</h1>
+            <div class="flex justify-center items-center gap-6 mt-3 text-xs font-bold text-teal-200/60">
+                <span>Mistakes: <span id="mistake-count" class="text-rose-400">0</span></span>
+                <span>Gifts: <span id="gift-count" class="text-amber-400">0</span>/10</span>
+            </div>
+        </div>
 
-    <!-- CONTROLS -->
-    <div id="control-zone" class="w-full flex flex-col gap-3 pb-6 max-w-sm">
-        <div id="keyboard" class="grid grid-cols-7 gap-2 pt-1"></div>
+        <div id="board-zone" class="w-full my-8 flex flex-col gap-4 items-center justify-center"></div>
+
+        <div id="control-zone" class="w-full flex flex-col gap-3 pb-6">
+            <div id="keyboard" class="grid grid-cols-7 gap-2"></div>
+        </div>
     </div>
 
     <!-- GIFT POPUP -->
@@ -40,29 +48,21 @@
         <div class="bg-[#05151e] border-2 border-teal-500 p-6 rounded-2xl text-center shadow-2xl">
             <div id="gift-icon" class="text-6xl mb-2">🎁</div>
             <h4 id="gift-title" class="text-amber-400 font-bold text-lg">Gift Unlocked!</h4>
-            <p id="gift-desc" class="text-teal-100 text-sm mt-2">A small treasure for Baby Nakul.</p>
             <button onclick="document.getElementById('gift-modal').classList.add('hidden')" class="mt-4 bg-teal-600 px-6 py-2 rounded-lg font-bold text-white">Continue</button>
         </div>
     </div>
 
     <script>
         const secretString = "NAKULVEDANTH";
-        const uniqueChars = new Set(secretString.split(''));
         let rightSet = new Set(); 
         let mistakeCount = 0;
-        
-        const gifts = [
-            { icon: "🧸", name: "Teddy Bear", desc: "For sweet dreams." },
-            { icon: "🍼", name: "Golden Bottle", desc: "For a happy tummy." },
-            { icon: "🧦", name: "Tiny Booties", desc: "For little steps." },
-            { icon: "👑", name: "Prince Crown", desc: "For our little royal." },
-            { icon: "🧿", name: "Nazar Battu", desc: "For protection." },
-            { icon: "📚", name: "Bedtime Book", desc: "For wisdom." },
-            { icon: "🍦", name: "Ice Cream Pass", desc: "For treats." },
-            { icon: "🚲", name: "Saffron Tricycle", desc: "For adventures." },
-            { icon: "🎧", name: "Lullabies", desc: "For peaceful nights." },
-            { icon: "🗝️", name: "Master Key", desc: "The vault is open!" }
-        ];
+        const gifts = ["🧸","🍼","🧦","👑","🧿","📚","🍦","🚲","🎧","🗝️"];
+
+        function startGame() {
+            document.getElementById('intro-zone').classList.add('hidden');
+            document.getElementById('game-zone').classList.remove('hidden');
+            initBoard(); initKeyboard();
+        }
 
         function initBoard() {
             const dock = document.getElementById('board-zone'); dock.innerHTML = '';
@@ -108,15 +108,11 @@
 
         function showGift(i) {
             if(i < gifts.length) {
-                document.getElementById('gift-icon').innerText = gifts[i].icon;
-                document.getElementById('gift-title').innerText = gifts[i].name;
-                document.getElementById('gift-desc').innerText = gifts[i].desc;
+                document.getElementById('gift-icon').innerText = gifts[i];
                 document.getElementById('gift-modal').classList.remove('hidden');
                 confetti({ particleCount: 50 });
             }
         }
-
-        initBoard(); initKeyboard();
     </script>
 </body>
 </html>
