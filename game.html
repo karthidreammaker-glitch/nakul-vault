@@ -485,6 +485,23 @@
                 blessingBtn.classList.remove('text-amber-400', 'border-amber-400');
             }
         }
+        // --- AMBIENT BACKGROUND MUSIC ---
+    let bgMusic;
+    async function startAmbientMusic() {
+        await Tone.start();
+        bgMusic = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "triangle" },
+            envelope: { attack: 3, decay: 1, sustain: 0.8, release: 5 }
+        }).toDestination();
+        bgMusic.volume.value = -24;
+        const notes = ["C3", "G3", "D4", "A3"];
+        const loop = new Tone.Loop((time) => {
+            const note = notes[Math.floor(Math.random() * notes.length)];
+            bgMusic.triggerAttackRelease(note, "2n", time);
+        }, "4n");
+        Tone.Transport.start();
+        loop.start(0);
+    }
     </script>
 </body>
 </html>
