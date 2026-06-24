@@ -16,7 +16,7 @@
             color: #fdfbf7; /* Kasavu Cream */
             overflow-x: hidden; 
             user-select: none; 
-            margin:0; 
+            margin: 0; 
             background-image: radial-gradient(circle at center, #042915 0%, #02160b 100%);
         }
 
@@ -108,7 +108,6 @@
                 <button id="tab-blessing-btn" onclick="switchTab('blessing')" class="flex-1 py-2 text-xs font-trad uppercase tracking-widest text-amber-400 border-b-2 border-amber-400 transition-all duration-500">Blessing 🪔</button>
                 <button id="tab-meaning-btn" onclick="switchTab('meaning')" class="flex-1 py-2 text-xs font-trad uppercase tracking-widest text-amber-600 border-b-2 border-transparent hover:text-amber-300 transition-all duration-500 relative">
                     Meaning 📜
-                    <!-- Glowing notification dot -->
                     <span class="absolute top-1 right-4 flex h-2 w-2">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                       <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
@@ -164,7 +163,28 @@
         let mistakeCount = 0;
         let isGameOver = false;
         let isWin = false;
+        let bgMusic; // Ambient music reference
         
+        // --- AMBIENT BACKGROUND MUSIC ---
+        async function startAmbientMusic() {
+            await Tone.start();
+            bgMusic = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "triangle" },
+                envelope: { attack: 3, decay: 1, sustain: 0.8, release: 5 }
+            }).toDestination();
+            
+            bgMusic.volume.value = -24; // Smooth, low volume
+            
+            const notes = ["C3", "G3", "D4", "A3"];
+            const loop = new Tone.Loop((time) => {
+                const note = notes[Math.floor(Math.random() * notes.length)];
+                bgMusic.triggerAttackRelease(note, "2n", time);
+            }, "4n");
+            
+            Tone.Transport.start();
+            loop.start(0);
+        }
+
         // --- ASTROLOGER CLUES & BLESSINGS ---
         const staticClues = [
             "  His first name belongs to the handsome and wise fourth Pandava.",
@@ -186,7 +206,7 @@
                 if (i < text.length) {
                     el.innerHTML = text.substring(0, i+1);
                     i++;
-                    setTimeout(type, speed); // Slowed down from 25 to 60
+                    setTimeout(type, speed);
                 } else {
                     el.classList.remove('cursor');
                 }
@@ -236,6 +256,8 @@
         ];
 
         function startGame() {
+            startAmbientMusic(); // Start the background audio
+            
             const intro = document.getElementById('intro-zone');
             const game = document.getElementById('game-zone');
             
@@ -244,12 +266,11 @@
                 intro.classList.add('hidden');
                 game.classList.remove('hidden');
                 game.classList.add('flex');
-                // Trigger reflow
-                void game.offsetWidth;
+                void game.offsetWidth; // Trigger reflow
                 game.style.opacity = '1';
                 initBoard(); 
                 initKeyboard();
-            }, 1000); // Slow fade out
+            }, 1000);
         }
 
         function initBoard() {
@@ -262,9 +283,7 @@
                     slot.className = 'perspective w-11 h-14 sm:w-14 sm:h-16 flex-shrink-0';
                     slot.innerHTML = `
                         <div class="transform-3d relative w-full h-full shadow-lg rounded-md ${isFound || (isGameOver && !isWin) ? 'rotate-y-180' : ''}">
-                            <!-- UNREVEALED: Deep Green & Gold border -->
                             <div class="backface-hidden absolute inset-0 bg-[#042915] border-2 border-amber-600/70 rounded-md flex items-center justify-center text-amber-500/30 font-trad font-bold text-2xl">?</div>
-                            <!-- REVEALED: Cream/Gold Text -->
                             <div class="backface-hidden rotate-y-180 absolute inset-0 ${isGameOver && !isWin && !isFound ? 'bg-red-950 border-red-800 text-red-300' : 'bg-gradient-to-br from-amber-50 to-amber-200 border-2 border-amber-400 text-[#02160b] shadow-[0_0_20px_rgba(251,191,36,0.4)]'} rounded-md flex items-center justify-center font-trad font-bold text-2xl sm:text-3xl">${char}</div>
                         </div>
                     `;
@@ -296,9 +315,8 @@
                         setTimeout(() => {
                             msg.innerText = `"${encouragements[Math.floor(Math.random() * encouragements.length)]}"`;
                             msg.style.opacity = 1;
-                        }, 500); // Slow text fade
+                        }, 500);
                         
-                        // SLOW MOTION CONFETTI
                         confetti({ particleCount: 30, gravity: 0.3, spread: 80, ticks: 250, colors: ['#fef3c7', '#fbbf24', '#b45309'], origin: {y: 0.7} });
                         initBoard();
                         initKeyboard();
@@ -308,7 +326,6 @@
                         mistakeCount++; 
                         document.getElementById('mistake-count').innerText = mistakeCount; 
                         
-                        // Gentle, slow screen shake
                         document.body.style.transition = "transform 0.4s ease-in-out";
                         document.body.style.transform = "translate(3px, 2px)";
                         setTimeout(() => document.body.style.transform = "translate(0, 0)", 400);
@@ -332,7 +349,7 @@
             if (rightSet.size === uniqueChars.size) {
                 isGameOver = true;
                 isWin = true;
-                setTimeout(showPostMissionModal, 2000); // Extra long delay to let the final slow flip finish
+                setTimeout(showPostMissionModal, 2000);
             } else if (mistakeCount >= 5) {
                 isGameOver = true;
                 isWin = false;
@@ -354,28 +371,11 @@
                 tabs.classList.remove('hidden');
                 switchTab('blessing');
                 
-                // Slow motion victory shower
                 const duration = 3000;
                 const end = Date.now() + duration;
                 (function frame() {
-                    confetti({
-                        particleCount: 3,
-                        angle: 60,
-                        spread: 55,
-                        origin: { x: 0 },
-                        colors: ['#fbbf24', '#fef3c7'],
-                        gravity: 0.4,
-                        ticks: 300
-                    });
-                    confetti({
-                        particleCount: 3,
-                        angle: 120,
-                        spread: 55,
-                        origin: { x: 1 },
-                        colors: ['#fbbf24', '#fef3c7'],
-                        gravity: 0.4,
-                        ticks: 300
-                    });
+                    confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#fef3c7'], gravity: 0.4, ticks: 300 });
+                    confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#fef3c7'], gravity: 0.4, ticks: 300 });
                     if (Date.now() < end) requestAnimationFrame(frame);
                 }());
             } else {
@@ -383,16 +383,14 @@
                 title.className = "font-trad text-3xl font-bold text-red-500 mb-3 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]";
                 target.classList.add('hidden');
                 tabs.classList.add('hidden');
-                switchTab('blessing'); // Lock to blessing tab if failed
+                switchTab('blessing');
                 
-                // Play crying sound and restart after a few seconds
                 playBabyCry();
                 document.getElementById('ai-debrief-output').innerText = "The child has grown restless... Pacifying the baby and preparing to restart the ceremony.";
                 setTimeout(() => window.location.reload(), 4500);
             }
             
             modal.classList.remove('hidden');
-            // Trigger fade in
             setTimeout(() => modal.style.opacity = '1', 50);
         }
 
@@ -410,7 +408,7 @@
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
                     radius: Math.random() * 2 + 0.5,
-                    speed: Math.random() * 0.3 + 0.1, // Very slow drift
+                    speed: Math.random() * 0.3 + 0.1,
                     alpha: Math.random() * 0.5 + 0.2
                 });
             }
@@ -419,7 +417,7 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => {
-                ctx.fillStyle = `rgba(251, 191, 36, ${p.alpha})`; // Amber/Gold color
+                ctx.fillStyle = `rgba(251, 191, 36, ${p.alpha})`;
                 ctx.beginPath(); 
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                 ctx.fill();
@@ -435,8 +433,7 @@
 
         // --- TONE.JS AUDIO SYNTHESIS FOR BABY CRY ---
         async function playBabyCry() {
-            await Tone.start(); // Required to unlock audio context in modern browsers
-            
+            await Tone.start();
             const synth = new Tone.Synth({
                 oscillator: { type: "fmsawtooth", modulationIndex: 2, modulationType: "triangle" },
                 envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1 }
@@ -446,16 +443,9 @@
             synth.connect(vibrato);
 
             const now = Tone.now();
-            
-            // Simulate 3 wails ("Wahhh... wahhh... WAAAAHHH") dropping in pitch
-            synth.triggerAttackRelease("E5", "8n", now);
-            synth.frequency.rampTo("C5", 0.3, now + 0.1);
-            
-            synth.triggerAttackRelease("Eb5", "8n", now + 0.8);
-            synth.frequency.rampTo("B4", 0.3, now + 0.9);
-            
-            synth.triggerAttackRelease("E5", "2n", now + 1.6);
-            synth.frequency.rampTo("A4", 0.8, now + 1.8);
+            synth.triggerAttackRelease("E5", "8n", now); synth.frequency.rampTo("C5", 0.3, now + 0.1);
+            synth.triggerAttackRelease("Eb5", "8n", now + 0.8); synth.frequency.rampTo("B4", 0.3, now + 0.9);
+            synth.triggerAttackRelease("E5", "2n", now + 1.6); synth.frequency.rampTo("A4", 0.8, now + 1.8);
         }
 
         // TAB SWITCHING LOGIC
@@ -466,42 +456,15 @@
             const meaningTab = document.getElementById('tab-meaning');
 
             if (tab === 'blessing') {
-                blessingTab.classList.remove('hidden');
-                meaningTab.classList.add('hidden');
-                
-                blessingBtn.classList.add('text-amber-400', 'border-amber-400');
-                blessingBtn.classList.remove('text-amber-600', 'border-transparent');
-                
-                meaningBtn.classList.add('text-amber-600', 'border-transparent');
-                meaningBtn.classList.remove('text-amber-400', 'border-amber-400');
+                blessingTab.classList.remove('hidden'); meaningTab.classList.add('hidden');
+                blessingBtn.classList.add('text-amber-400', 'border-amber-400'); blessingBtn.classList.remove('text-amber-600', 'border-transparent');
+                meaningBtn.classList.add('text-amber-600', 'border-transparent'); meaningBtn.classList.remove('text-amber-400', 'border-amber-400');
             } else {
-                blessingTab.classList.add('hidden');
-                meaningTab.classList.remove('hidden');
-                
-                meaningBtn.classList.add('text-amber-400', 'border-amber-400');
-                meaningBtn.classList.remove('text-amber-600', 'border-transparent');
-                
-                blessingBtn.classList.add('text-amber-600', 'border-transparent');
-                blessingBtn.classList.remove('text-amber-400', 'border-amber-400');
+                blessingTab.classList.add('hidden'); meaningTab.classList.remove('hidden');
+                meaningBtn.classList.add('text-amber-400', 'border-amber-400'); meaningBtn.classList.remove('text-amber-600', 'border-transparent');
+                blessingBtn.classList.add('text-amber-600', 'border-transparent'); blessingBtn.classList.remove('text-amber-400', 'border-amber-400');
             }
         }
-        // --- AMBIENT BACKGROUND MUSIC ---
-    let bgMusic;
-    async function startAmbientMusic() {
-        await Tone.start();
-        bgMusic = new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: "triangle" },
-            envelope: { attack: 3, decay: 1, sustain: 0.8, release: 5 }
-        }).toDestination();
-        bgMusic.volume.value = -24;
-        const notes = ["C3", "G3", "D4", "A3"];
-        const loop = new Tone.Loop((time) => {
-            const note = notes[Math.floor(Math.random() * notes.length)];
-            bgMusic.triggerAttackRelease(note, "2n", time);
-        }, "4n");
-        Tone.Transport.start();
-        loop.start(0);
-    }
     </script>
 </body>
 </html>
