@@ -32,9 +32,12 @@
         <div class="text-center w-full pt-2">
             <span class="text-amber-400 text-[10px] font-black uppercase tracking-widest">Royal Vault Engaged</span>
             <h1 class="font-regal text-xl font-black mt-2 text-white">REVEAL THE NAME</h1>
-            <div class="flex justify-center gap-6 mt-2 text-xs font-bold text-amber-200/70">
+            <!-- MOTIVATION BOX -->
+            <div id="motivation" class="mt-4 text-sm italic text-amber-200/80 font-medium h-6">
+                "Begin your journey, noble traveler."
+            </div>
+            <div class="flex justify-center gap-6 mt-2 text-xs font-bold text-amber-200/50">
                 <span>Mistakes: <span id="mistake-count" class="text-rose-400">0</span></span>
-                <span>Gifts: <span id="gift-count" class="text-amber-400">0</span>/10</span>
             </div>
         </div>
 
@@ -45,19 +48,21 @@
         </div>
     </div>
 
-    <!-- GIFT POPUP -->
-    <div id="gift-modal" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-black/90 p-6">
-        <div class="bg-[#3d080f] border-2 border-amber-500 p-6 rounded-2xl text-center shadow-2xl">
-            <div id="gift-icon" class="text-6xl mb-2">🎁</div>
-            <h4 class="text-amber-400 font-bold text-lg">Gift Unlocked!</h4>
-            <button onclick="document.getElementById('gift-modal').classList.add('hidden')" class="mt-4 bg-red-900 px-8 py-2 rounded-lg font-bold text-white">Continue</button>
-        </div>
-    </div>
-
     <script>
         const secretString = "NAKULVEDANTH";
         let rightSet = new Set(); let mistakeCount = 0;
-        const gifts = ["🧸","🍼","🧦","👑","🧿","📚","🍦","🚲","🎧","🗝️"];
+        const encouragements = [
+            "A brilliant start! Find the next stone.",
+            "Wisdom guides your hand. Continue!",
+            "Excellent choice. The name reveals itself.",
+            "The stars favor your persistence.",
+            "You are halfway to the truth!",
+            "Steady now, the mystery deepens.",
+            "Gracefully done. Only a few remain.",
+            "The court watches your success.",
+            "Almost there, noble seeker.",
+            "A momentous revelation awaits!"
+        ];
 
         function startGame() {
             document.getElementById('intro-zone').classList.add('hidden');
@@ -92,20 +97,16 @@
                 btn.className = 'h-10 rounded bg-red-950 text-amber-200 font-black border border-amber-800 active:scale-95';
                 btn.onclick = () => {
                     if (secretString.includes(l)) {
-                        if (!rightSet.has(l)) { rightSet.add(l); document.getElementById('gift-count').innerText = rightSet.size; showGift(rightSet.size - 1); }
+                        if (!rightSet.has(l)) {
+                            rightSet.add(l);
+                            document.getElementById('motivation').innerText = `"${encouragements[rightSet.size - 1] || "Magnificent!"}"`;
+                            confetti({ particleCount: 20, gravity: 0.5 });
+                        }
                         initBoard();
                     } else { mistakeCount++; document.getElementById('mistake-count').innerText = mistakeCount; }
                 };
                 kb.appendChild(btn);
             });
-        }
-
-        function showGift(i) {
-            if(i < gifts.length) {
-                document.getElementById('gift-icon').innerText = gifts[i];
-                document.getElementById('gift-modal').classList.remove('hidden');
-                confetti({ particleCount: 50, colors: ['#fbbf24', '#b91c1c'] });
-            }
         }
 
         // Marigold Dust Effect
