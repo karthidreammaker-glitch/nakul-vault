@@ -7,93 +7,75 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #051319; color: #fdf6e3; overflow-x: hidden; user-select: none; margin:0; }
-        .font-regal { font-family: 'Cinzel', serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap');
+        body { font-family: 'Outfit', sans-serif; background: #070913; color: #f8fafc; overflow-x: hidden; user-select: none; margin:0; }
         .perspective { perspective: 1000px; }
-        .transform-3d { transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .transform-3d { transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .rotate-y-180 { transform: rotateY(180deg); }
         .backface-hidden { backface-visibility: hidden; }
-        .floating { animation: float 3s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+        .floating { animation: float 3s ease-in-out infinite; }
     </style>
 </head>
-<body class="relative flex flex-col items-center justify-between min-h-screen p-3 max-w-md mx-auto">
-    <canvas id="dust" class="absolute inset-0 pointer-events-none z-0 opacity-50"></canvas>
+<body class="flex flex-col items-center justify-between min-h-screen p-4 max-w-md mx-auto">
 
-    <div id="intro-zone" class="my-auto w-full flex flex-col items-center text-center p-6">
-        <h1 class="font-regal text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-200 to-emerald-400 mb-4">THE NAME DROP</h1>
-        <button onclick="startGame()" class="w-32 h-32 rounded-full bg-gradient-to-b from-amber-300 to-amber-700 p-1 active:scale-95 transition">
-            <div class="w-full h-full rounded-full bg-[#051319] flex items-center justify-center font-regal text-[10px] font-black text-amber-200 uppercase">Start Reveal</div>
-        </button>
+    <div id="header-zone" class="text-center w-full pt-4">
+        <span class="bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 px-3.5 py-1 rounded-full text-xs font-black tracking-widest uppercase">Royal Vault Engaged</span>
+        <h1 class="text-2xl font-black mt-3 text-white">THE NAME DROP</h1>
+        <div class="flex justify-center items-center gap-3 mt-2 text-xs font-bold text-slate-400">
+            <span>Mistakes: <span id="mistake-count" class="text-rose-400">0</span></span>
+            <span>Unlocked: <span id="found-count" class="text-emerald-400">0</span>/12</span>
+        </div>
     </div>
 
-    <div id="header-zone" class="hidden text-center pt-4">
-        <div class="text-teal-400 text-xs font-black uppercase tracking-widest">🦚 Royal Vault Engaged</div>
-        <h2 class="font-regal text-2xl font-black text-teal-100">Reveal The Name</h2>
+    <div id="board-zone" class="w-full my-auto flex flex-col gap-4 items-center justify-center py-6">
     </div>
 
-    <div id="board-zone" class="hidden flex-col gap-3 my-auto">
-        <div id="row-one" class="flex gap-2"></div>
-        <div id="row-two" class="flex gap-2"></div>
-    </div>
-
-    <div id="control-zone" class="hidden w-full pb-6 px-4">
-        <div id="keyboard" class="grid grid-cols-7 gap-1"></div>
+    <div id="control-zone" class="w-full flex flex-col gap-3 pb-6 max-w-sm">
+        <button id="hint-btn" onclick="showHint()" class="w-full py-3 bg-slate-800 border border-slate-700 rounded-xl text-xs font-extrabold text-indigo-400">💡 Tap for Hint</button>
+        <div id="keyboard" class="grid grid-cols-7 gap-2 pt-1"></div>
     </div>
 
     <script>
+        const words = ["NAKUL", "VEDANTH"];
         const secretString = "NAKULVEDANTH";
-        let rightSet = new Set();
-        
-        function startGame() {
-            document.getElementById('intro-zone').classList.add('hidden');
-            document.getElementById('header-zone').classList.remove('hidden');
-            document.getElementById('board-zone').classList.remove('hidden');
-            document.getElementById('board-zone').classList.add('flex');
-            document.getElementById('control-zone').classList.remove('hidden');
-            document.getElementById('control-zone').classList.add('flex');
-            initBoard();
-            initKeyboard();
-        }
-
-        function renderRow(word, containerId) {
-            const row = document.getElementById(containerId); row.innerHTML = '';
-            word.split('').forEach(char => {
-                const isFound = rightSet.has(char);
-                const slot = document.createElement('div');
-                slot.className = 'perspective w-10 h-12 flex-shrink-0';
-                slot.innerHTML = `
-                    <div class="transform-3d relative w-full h-full rounded-xl shadow-lg ${isFound ? 'rotate-y-180' : ''}">
-                        <div class="backface-hidden absolute inset-0 bg-teal-900 border-2 border-teal-500 rounded-xl flex items-center justify-center text-cyan-400 font-bold">?</div>
-                        <div class="backface-hidden rotate-y-180 absolute inset-0 bg-amber-400 rounded-xl flex items-center justify-center text-slate-950 font-black text-2xl">${char}</div>
-                    </div>
-                `;
-                row.appendChild(slot);
-            });
-        }
+        let rightSet = new Set(); let wrongSet = new Set(); let mistakeCount = 0;
 
         function initBoard() {
-            renderRow("NAKUL", "row-one");
-            renderRow("VEDANTH", "row-two");
+            const dock = document.getElementById('board-zone'); dock.innerHTML = '';
+            words.forEach(w => {
+                const row = document.createElement('div'); row.className = 'flex gap-2 justify-center';
+                w.split('').forEach(char => {
+                    const isFound = rightSet.has(char);
+                    const slot = document.createElement('div');
+                    slot.className = 'perspective w-12 h-14';
+                    slot.innerHTML = `
+                        <div class="transform-3d relative w-full h-full rounded-xl shadow-lg ${isFound ? 'rotate-y-180' : ''}">
+                            <div class="backface-hidden absolute inset-0 bg-slate-800 border-2 border-slate-700 rounded-xl flex items-center justify-center text-slate-500 font-black text-2xl">?</div>
+                            <div class="backface-hidden rotate-y-180 absolute inset-0 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-2xl border border-indigo-400">${char}</div>
+                        </div>
+                    `;
+                    row.appendChild(slot);
+                });
+                dock.appendChild(row);
+            });
+            document.getElementById('found-count').innerText = Array.from(rightSet).length;
         }
 
         function initKeyboard() {
             const kb = document.getElementById('keyboard'); kb.innerHTML = '';
-            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').sort(() => Math.random() - 0.5);
-            letters.forEach(l => {
-                const btn = document.createElement('button');
-                btn.innerText = l;
-                btn.className = "h-10 rounded bg-teal-950 text-teal-100 font-bold border border-teal-700 active:scale-90";
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
+                const btn = document.createElement('button'); btn.innerText = l;
+                btn.className = 'h-11 rounded-lg font-black bg-slate-800 text-slate-200 border border-slate-700 active:scale-95';
                 btn.onclick = () => {
-                    if(secretString.includes(l)) {
-                        rightSet.add(l);
-                        initBoard();
-                    }
+                    if (secretString.includes(l)) { rightSet.add(l); initBoard(); }
+                    else { wrongSet.add(l); mistakeCount++; document.getElementById('mistake-count').innerText = mistakeCount; }
+                    initKeyboard();
                 };
                 kb.appendChild(btn);
             });
         }
+        initBoard(); initKeyboard();
     </script>
 </body>
 </html>
