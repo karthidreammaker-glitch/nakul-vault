@@ -57,7 +57,10 @@
         
         <button onclick="startGame()" class="w-36 h-36 rounded-full bg-gradient-to-br from-amber-200 to-amber-600 p-1.5 shadow-[0_0_40px_rgba(251,191,36,0.3)] active:scale-95 transition-all duration-700">
             <div class="w-full h-full rounded-full bg-[#032010] flex items-center justify-center border border-amber-500/50 divine-glow">
-                <span class="font-trad text-lg font-bold text-amber-200 uppercase tracking-widest">Seek<br>Blessings</span>
+                <!-- Glowing Baby Footprint SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" class="w-16 h-16 text-amber-200 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">
+                    <path d="M222.1,135.25A24,24,0,0,0,216,112a40.23,40.23,0,0,0-58-9.45c-15.69,11-20.11,26.47-19.86,41.22.15,8.81,2.05,17,7,24,9.64,13.82,24,19.34,39,19.34A54.34,54.34,0,0,0,217,173C227,163.78,228.67,148.9,222.1,135.25ZM139.73,63.15A16.08,16.08,0,0,0,144,48a24,24,0,0,0-44.47-12.63c-7,11.36-5.32,24.51,4.41,34.25S127,76.68,139.73,63.15Zm-60.28,68A32,32,0,0,0,32,120a16,16,0,0,0-6,31.25c6.54,13.61,4.92,28.53-5,37.76A54.34,54.34,0,0,0,54,203.22c15,0,29.35-5.52,39-19.34,5-7,6.86-15.24,7-24C100.22,145.16,95.53,129.56,79.45,131.15ZM232,80a12,12,0,1,1-12-12A12,12,0,0,1,232,80Zm-36-44a12,12,0,1,1-12-12A12,12,0,0,1,196,36ZM60,76a12,12,0,1,1,12-12A12,12,0,0,1,60,76ZM96,104a12,12,0,1,1,12-12A12,12,0,0,1,96,104Z"></path>
+                </svg>
             </div>
         </button>
     </div>
@@ -236,6 +239,8 @@
         ];
 
         function startGame() {
+            playBabyLaugh(); // Trigger the joyful giggle
+            
             const intro = document.getElementById('intro-zone');
             const game = document.getElementById('game-zone');
             
@@ -456,6 +461,28 @@
             
             synth.triggerAttackRelease("E5", "2n", now + 1.6);
             synth.frequency.rampTo("A4", 0.8, now + 1.8);
+        }
+
+        // --- TONE.JS AUDIO SYNTHESIS FOR BABY LAUGH/GIGGLE ---
+        async function playBabyLaugh() {
+            await Tone.start();
+            
+            const synth = new Tone.Synth({
+                oscillator: { type: "fmsine", modulationType: "triangle", modulationIndex: 1.5 },
+                envelope: { attack: 0.02, decay: 0.15, sustain: 0, release: 0.1 }
+            }).toDestination();
+
+            const now = Tone.now();
+            
+            // Generate a rapid sequence of 4 descending happy chirps (a bubbly giggle)
+            for(let i = 0; i < 4; i++) {
+                const time = now + (i * 0.13);
+                synth.triggerAttackRelease("A5", 0.1, time);
+                synth.frequency.rampTo("E5", 0.1, time);
+            }
+            // Final happy squeal
+            synth.triggerAttackRelease("C6", 0.2, now + 0.55);
+            synth.frequency.rampTo("A5", 0.2, now + 0.55);
         }
 
         // TAB SWITCHING LOGIC
