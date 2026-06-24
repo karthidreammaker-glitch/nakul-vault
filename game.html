@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Royal Naamkaran</title>
+    <title>The Name Drop - Nakul Vedanth</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #180408; color: #fdf6e3; overflow-x: hidden; user-select: none; margin:0; }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@800;900&family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #051319; color: #fdf6e3; overflow-x: hidden; user-select: none; margin:0; }
         .font-regal { font-family: 'Cinzel', serif; }
         
         .perspective { perspective: 1000px; }
@@ -19,49 +19,45 @@
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
         .floating { animation: float 3s ease-in-out infinite; }
         
-        @keyframes gold-pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.08); opacity: 0.95; } }
-        .aura-gold { animation: gold-pulse 3s infinite; }
+        @keyframes teal-pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.08); opacity: 0.95; } }
+        .aura-peacock { animation: teal-pulse 3s infinite; }
     </style>
 </head>
 <body class="relative flex flex-col items-center justify-between min-h-screen p-3 sm:p-4 max-w-md mx-auto z-10">
 
     <!-- DRIFTING MARIGOLD DUST CANVAS -->
-    <canvas id="marigold-dust" class="absolute inset-0 pointer-events-none z-0 opacity-70"></canvas>
+    <canvas id="marigold-dust" class="absolute inset-0 pointer-events-none z-0 opacity-75"></canvas>
 
     <div class="relative z-10 w-full flex flex-col items-center justify-between min-h-[95vh]">
         
         <!-- =================================================== -->
-        <!-- 0. THE ROYAL NAAMKARAN LANDING PAGE (ROUND CENTER)  -->
+        <!-- 0. MODERN INTRO SCREEN  -->
         <!-- =================================================== -->
         <div id="intro-zone" class="my-auto w-full flex flex-col items-center justify-center text-center p-4 sm:p-6 min-h-[82vh]">
             
-            <div class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/10 via-amber-500/20 to-amber-500/10 border border-amber-500/40 text-amber-300 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase mb-4 shadow-lg">
-                <span class="text-amber-400 text-sm">🪔</span> A Grand Naamkaran
+            <div class="inline-flex items-center gap-2 bg-teal-500/10 border border-teal-500/30 text-teal-300 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase mb-3 shadow-lg">
+                <span class="text-teal-400 text-sm">🦚</span> VIP DECRYPTION TERMINAL
             </div>
             
-            <h1 class="font-regal text-4xl sm:text-5xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-400 to-orange-400 mb-1 drop-shadow-[0_2px_15px_rgba(245,158,11,0.3)]">
-                Shubh Aarambh
+            <h1 class="font-regal text-4xl sm:text-5xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-teal-100 via-cyan-300 to-emerald-400 mb-2 drop-shadow-[0_2px_15px_rgba(6,182,212,0.3)]">
+                THE NAME DROP
             </h1>
             
-            <p class="text-xs sm:text-sm text-amber-200/80 font-medium max-w-xs mb-8">
-                The destined moniker of our little prince is sealed inside the stone matrix. 
+            <p class="text-xs sm:text-sm text-teal-100/90 font-medium max-w-xs mb-6 leading-relaxed">
+                The little man’s official name is locked inside this vault. Crack the code to meet him.
             </p>
 
-            <!-- THE PERFECTLY ROUND CENTER GOLD MEDALLION -->
-            <div class="relative my-4 flex items-center justify-center">
-                <!-- Pulsing Saffron/Gold Aura -->
-                <div class="absolute w-44 h-44 sm:w-48 sm:h-48 bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-400 rounded-full blur-xl aura-gold pointer-events-none"></div>
+            <!-- ROUND CENTER GOLD MEDALLION -->
+            <div class="relative my-2 flex items-center justify-center">
+                <div class="absolute w-44 h-44 sm:w-48 sm:h-48 bg-gradient-to-tr from-cyan-500 via-teal-500 to-emerald-400 rounded-full blur-xl aura-peacock pointer-events-none"></div>
                 
-                <!-- Clickable Medallion -->
-                <button onclick="startGame()" class="relative group z-10 w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-1 shadow-[0_0_35px_rgba(245,158,11,0.5)] active:scale-95 transition-all duration-300 cursor-pointer">
-                    <div class="w-full h-full rounded-full bg-[#2b060c] flex flex-col items-center justify-center border-2 border-amber-400/50 shadow-inner relative overflow-hidden">
-                        
-                        <!-- Subtle background sun rays inside coin -->
-                        <div class="absolute inset-0 opacity-15 flex items-center justify-center pointer-events-none">
-                            <div class="w-full h-full border-[12px] border-dashed border-amber-400 rounded-full animate-spin" style="animation-duration: 40s;"></div>
+                <button onclick="startGame()" class="relative group z-10 w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-1 shadow-[0_0_35px_rgba(6,182,212,0.4)] active:scale-95 transition-all duration-300 cursor-pointer">
+                    <div class="w-full h-full rounded-full bg-[#051319] flex flex-col items-center justify-center border-2 border-amber-400/50 shadow-inner relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-20 flex items-center justify-center pointer-events-none">
+                            <div class="w-full h-full border-[12px] border-dashed border-teal-400 rounded-full animate-spin" style="animation-duration: 40s;"></div>
                         </div>
 
-                        <!-- Vector Baby Palm Print in Saffron Gold -->
+                        <!-- Vector Baby Palm Print -->
                         <svg viewBox="0 0 100 100" class="w-16 h-16 sm:w-18 sm:h-18 text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] group-hover:scale-105 transition-transform mb-0.5">
                             <path d="M 30 55 C 30 38 70 38 70 55 C 72 75 58 85 50 85 C 42 85 28 75 30 55 Z" fill="currentColor"/>
                             <ellipse cx="20" cy="52" rx="6.5" ry="9" transform="rotate(-35 20 52)" fill="currentColor"/>
@@ -76,59 +72,75 @@
                 </button>
             </div>
 
-            <!-- Protocol Box -->
-            <div class="mt-10 bg-[#2b060c]/80 border border-rose-500/30 rounded-2xl p-3 px-4 shadow-inner inline-flex items-center gap-2">
+            <div class="mt-8 bg-[#030b0e]/90 border border-rose-500/30 rounded-2xl p-3 px-4 shadow-inner inline-flex items-center gap-2">
                 <span class="text-rose-400 text-sm animate-pulse">⚠️</span>
                 <span class="text-xs text-rose-200/90 font-bold">
-                    PROTOCOL: <span class="text-rose-400 font-black">5 Mistakes</span> seals the royal vault forever.
+                    PROTOCOL: <span class="text-rose-400 font-black">5 Mistakes</span> triggers permanent lockdown.
                 </span>
             </div>
         </div>
 
 
         <!-- =================================================== -->
-        <!-- 1. TOP MISSION CONTROL (Hidden on load) -->
+        <!-- 1. TOP MISSION CONTROL -->
         <!-- =================================================== -->
         <div id="header-zone" class="hidden text-center w-full pt-1">
-            <div class="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-300 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase shadow-inner">
-                <span class="text-amber-400">🪔</span> Naming Matrix Active
+            <div class="inline-flex items-center gap-1.5 bg-teal-500/10 border border-teal-500/30 text-teal-300 px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase shadow-inner">
+                <span class="text-teal-400">🦚</span> Secure Matrix Active
             </div>
-            <h2 class="font-regal text-2xl sm:text-3xl font-black tracking-wider mt-1 bg-gradient-to-r from-amber-100 via-amber-300 to-orange-300 bg-clip-text text-transparent">
+            <h2 class="font-regal text-2xl sm:text-3xl font-black tracking-wider mt-1 bg-gradient-to-r from-teal-100 via-cyan-200 to-emerald-300 bg-clip-text text-transparent">
                 Decrypt The Moniker
             </h2>
             
             <div class="flex justify-center items-center gap-2.5 mt-2 text-xs font-extrabold">
-                <span class="bg-[#2b060c] text-rose-300 px-3 py-1 rounded-xl border border-rose-500/30 shadow-sm">
+                <span class="bg-[#030b0e] text-rose-300 px-3 py-1 rounded-xl border border-rose-500/30 shadow-sm">
                     ⚡ Mistakes: <span id="mistake-count" class="text-rose-400 font-black text-sm">0</span><span class="text-rose-500/60"> / 5</span>
                 </span>
-                <span class="bg-[#2b060c] text-emerald-300 px-3 py-1 rounded-xl border border-emerald-500/30 shadow-sm">
-                    🔏 Unlocked: <span id="found-count" class="text-emerald-400 font-black text-sm">0</span><span class="text-emerald-600/60">/12</span>
+                <span class="bg-[#030b0e] text-emerald-300 px-3 py-1 rounded-xl border border-emerald-500/30 shadow-sm">
+                    🎁 Gifts: <span id="gift-count" class="text-amber-400 font-black text-sm">0</span><span class="text-emerald-600/60">/10</span>
                 </span>
             </div>
         </div>
 
         <!-- =================================================== -->
-        <!-- 2. PUZZLE TILE DOCK (Hidden on load) -->
+        <!-- 2. PUZZLE TILE DOCK -->
         <!-- =================================================== -->
         <div id="board-zone" class="hidden w-full my-auto flex-col gap-3 sm:gap-4 items-center justify-center py-3">
             <!-- Rendered dynamically by JS -->
         </div>
 
         <!-- =================================================== -->
-        <!-- 3. VICTORY ZONE -->
+        <!-- 3. GIFT COLLECTED POPUP MODAL -->
         <!-- =================================================== -->
-        <div id="victory-zone" class="hidden my-auto w-full flex-col items-center text-center bg-gradient-to-b from-[#380811] via-[#24040a] to-[#180408] border-2 border-amber-400/80 p-6 rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.35)] backdrop-blur-2xl floating">
-            <div class="text-5xl sm:text-6xl mb-1 animate-bounce">🪔✨👑</div>
+        <div id="gift-modal" class="hidden absolute inset-0 z-50 flex-col items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md transition-all">
+            <div class="bg-[#05151e] border-2 border-teal-400/60 p-6 rounded-3xl max-w-xs w-full text-center shadow-[0_0_50px_rgba(20,184,166,0.35)] floating">
+                <div id="gift-icon" class="text-6xl sm:text-7xl mb-2 animate-bounce">🎁</div>
+                <div class="text-[10px] font-black tracking-widest text-teal-300 uppercase bg-teal-500/10 py-0.5 px-3 rounded-full inline-block mb-2 border border-teal-500/20">
+                    Reward Unlocked
+                </div>
+                <h4 id="gift-title" class="text-xl font-extrabold text-amber-400 mb-1">Title</h4>
+                <p id="gift-desc" class="text-xs text-teal-100/90 leading-relaxed mb-6">Desc</p>
+                <button onclick="closeGiftModal()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-[#051319] font-black text-xs py-3.5 px-6 rounded-xl shadow-lg active:scale-95 transition">
+                    Collect & Continue 🚀
+                </button>
+            </div>
+        </div>
+
+        <!-- =================================================== -->
+        <!-- 4. VICTORY ZONE -->
+        <!-- =================================================== -->
+        <div id="victory-zone" class="hidden my-auto w-full flex-col items-center text-center bg-gradient-to-b from-[#0a2636] via-[#061720] to-[#051319] border-2 border-amber-400/80 p-6 rounded-3xl shadow-[0_0_60px_rgba(6,182,212,0.35)] backdrop-blur-2xl floating">
+            <div class="text-5xl sm:text-6xl mb-1 animate-bounce">🦚✨👑</div>
             <div class="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 px-3 py-0.5 rounded-full border border-amber-400/20 mb-1">
-                The Heir Has Been Revealed
+                The Vault Has Surrendered
             </div>
             <h3 class="font-regal text-3xl sm:text-4xl font-black text-white mt-1 mb-3 tracking-widest drop-shadow-[0_2px_12px_rgba(255,255,255,0.4)]">
                 NAKUL VEDANTH
             </h3>
             
-            <div class="bg-[#180408]/90 p-4 rounded-2xl border border-amber-500/30 shadow-inner w-full relative overflow-hidden">
-                <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
-                <p class="text-xs sm:text-sm text-amber-100/90 italic font-medium leading-relaxed m-0">
+            <div class="bg-[#030b0e]/90 p-4 rounded-2xl border border-teal-500/30 shadow-inner w-full relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-teal-500/10 rounded-full blur-xl pointer-events-none"></div>
+                <p class="text-xs sm:text-sm text-teal-100/90 italic font-medium leading-relaxed m-0">
                     "Two little feet, one giant leap of love,<br>
                     Sent to our arms from the cosmos above.<br>
                     With wisdom in your soul and wonder in your eyes,<br>
@@ -148,9 +160,9 @@
         </div>
 
         <!-- =================================================== -->
-        <!-- 4. GAME OVER / LOCKDOWN ZONE -->
+        <!-- 5. GAME OVER / LOCKDOWN ZONE -->
         <!-- =================================================== -->
-        <div id="gameover-zone" class="hidden my-auto w-full flex-col items-center text-center bg-gradient-to-b from-rose-950/95 via-[#2b060c] to-[#180408] border-2 border-rose-500/60 p-6 rounded-3xl shadow-[0_0_50px_rgba(244,63,94,0.3)] backdrop-blur-2xl floating">
+        <div id="gameover-zone" class="hidden my-auto w-full flex-col items-center text-center bg-gradient-to-b from-rose-950/95 via-[#0a1d28] to-[#051319] border-2 border-rose-500/60 p-6 rounded-3xl shadow-[0_0_50px_rgba(244,63,94,0.3)] backdrop-blur-2xl floating">
             <div class="text-5xl sm:text-6xl mb-1 animate-pulse">🔒</div>
             <div class="text-[10px] font-black uppercase tracking-widest text-rose-400 bg-rose-400/10 px-3 py-0.5 rounded-full border border-rose-400/20 mb-1">
                 Security Threshold Breached
@@ -159,12 +171,12 @@
                 VAULT SEALED
             </h3>
             <p class="text-xs sm:text-sm text-rose-100/80 px-2 mb-5 leading-relaxed">
-                5 incorrect guesses were logged. The Royal Stork has bolted the grand doors of the courtyard. 
+                5 incorrect guesses were logged. The digital Stork has bolted the grand doors of the mainframe.
             </p>
 
             <div class="flex flex-col sm:flex-row gap-2.5 w-full">
-                <button onclick="window.location.reload()" class="flex-1 bg-[#380811] hover:bg-[#4a0a17] text-amber-200 border border-amber-500/30 text-xs font-extrabold py-3.5 px-4 rounded-xl shadow transition active:scale-95 flex items-center justify-center gap-1.5">
-                    <span>🔄</span> Seek Blessing (Try Again)
+                <button onclick="window.location.reload()" class="flex-1 bg-[#0a222f] hover:bg-[#0e3142] text-amber-200 border border-teal-500/30 text-xs font-extrabold py-3.5 px-4 rounded-xl shadow transition active:scale-95 flex items-center justify-center gap-1.5">
+                    <span>🔄</span> Reboot Terminal
                 </button>
                 
                 <a id="wa-lose-btn" href="#" target="_blank" class="flex-1 bg-rose-700 hover:bg-rose-600 text-white text-xs font-extrabold py-3.5 px-4 rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-1.5">
@@ -174,23 +186,24 @@
         </div>
 
         <!-- =================================================== -->
-        <!-- 5. CONTROLS & KEYBOARD -->
+        <!-- 6. SCRAMBLED KEYBOARD CONTROLS -->
         <!-- =================================================== -->
         <div id="control-zone" class="hidden w-full flex-col gap-2 pb-1 max-w-sm">
-            <div id="hint-display" class="hidden text-center bg-[#2b060c] border border-amber-500/30 text-amber-200 text-xs py-2 px-3 rounded-xl font-semibold shadow-inner"></div>
+            <div id="hint-display" class="hidden text-center bg-[#030b0e] border border-teal-500/30 text-teal-200 text-xs py-2 px-3 rounded-xl font-semibold shadow-inner"></div>
             
-            <button id="hint-btn" onclick="showHint()" class="w-full py-2.5 bg-gradient-to-r from-[#180408] via-[#2b060c] to-[#180408] hover:via-[#380811] active:scale-[0.98] border border-amber-500/30 rounded-xl text-xs font-extrabold text-amber-400 transition shadow-lg flex items-center justify-center gap-2">
-                <span class="text-orange-400 text-sm">💡</span> 
-                <span>Ask Royal Astrologer for Hint</span>
+            <button id="hint-btn" onclick="showHint()" class="w-full py-2 bg-gradient-to-r from-[#051319] via-[#0a222f] to-[#051319] hover:via-[#0e3142] active:scale-[0.98] border border-teal-500/30 rounded-xl text-xs font-extrabold text-amber-400 transition shadow flex items-center justify-center gap-1.5">
+                <span class="text-cyan-400 text-sm">💡</span> 
+                <span>Tap for a Stork Hint</span>
             </button>
 
-            <div id="keyboard" class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-1"></div>
+            <!-- 7-Column Grid. The '-' hyphens force the last 5 letters to be dead center! -->
+            <div id="keyboard" class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-0.5"></div>
         </div>
 
     </div>
 
     <script>
-        // RAGA YAMAN RETUNED SYNTHESIZER (Sa=261.6, Ga=329.6, Tivra Ma=369.9, Pa=392, Ni=493.8)
+        // RAGA YAMAN SYNTHESIZER
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
 
@@ -215,7 +228,7 @@
         function sfxWin() { [392, 440, 493.88, 523.25, 523.25, 523.25].forEach((n, i) => setTimeout(() => playTone(n, 'triangle', 0.22), i * 140)); }
         function sfxLose() { [261.6, 233.08, 207.65, 164.81].forEach((f, i) => setTimeout(() => playTone(f, 'sawtooth', 0.3), i * 200)); }
 
-        // DRIFTING MARIGOLD DUST 
+        // MARIGOLD DUST CANVAS
         const canvas = document.getElementById('marigold-dust'); const ctx = canvas.getContext('2d');
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
@@ -228,7 +241,6 @@
         function drawSpecks() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             specks.forEach(s => {
-                ctx.fillStyle = `rgba(2fb, 191, 36, ${s.alpha})`; // Tailwind amber-400 rgb
                 ctx.fillStyle = s.radius > 1.8 ? `rgba(249, 115, 22, ${s.alpha})` : `rgba(251, 191, 36, ${s.alpha})`;
                 ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2); ctx.fill();
                 s.y -= s.speed; if (s.y < 0) s.y = canvas.height;
@@ -237,6 +249,20 @@
         }
         drawSpecks();
 
+        // 10 VIRTUAL SHOWER GIFTS (Mapped 1:1 to the 10 unique letters)
+        const gifts = [
+            { icon: "🧸", name: "Virtual Teddy Bear", desc: "Guaranteed to protect his crib from bad dreams." },
+            { icon: "🍼", name: "Golden Milk Bottle", desc: "+100 to Baby Nakul's chubby cheek stats." },
+            { icon: "🧦", name: "Tiny Knitted Booties", desc: "For kicking Mom & Dad awake at 3:15 AM." },
+            { icon: "👑", name: "Mini Turban of Swag", desc: "Pure, unadulterated 100% princely confidence." },
+            { icon: "🧿", name: "Digital Nazar Battu", desc: "Zero evil eyes allowed anywhere near this child." },
+            { icon: "📚", name: "First Bedtime Book", desc: "Pre-loaded with infinite bedtime stories." },
+            { icon: "🍦", name: "Lifetime Ice Cream Pass", desc: "Valid exclusively at Grandpa & Grandma's house." },
+            { icon: "🚲", name: "Mini Saffron Tricycle", desc: "Reserved for the 2028 Living Room Grand Prix." },
+            { icon: "🎧", name: "Lullaby Headphones", desc: "For when Dad practices his singing voice." },
+            { icon: "🗝️", name: "The Vault Master Key", desc: "The final stone tumbler has surrendered. The lock is broken!" }
+        ];
+
         // PUZZLE STATE
         const words = ["NAKUL", "VEDANTH"];
         const secretString = "NAKULVEDANTH";
@@ -244,10 +270,10 @@
         let rightSet = new Set(); let wrongSet = new Set(); let mistakeCount = 0;
 
         const hints = [
-            "💡 Royal Hint 1: His first name belongs to the deeply wise, handsome 4th Pandava brother!",
-            "💡 Royal Hint 2: His second name translates to 'The Bearer of Ultimate Sacred Wisdom'.",
-            "💡 Royal Hint 3: Look closely—there are exactly 4 unique vowels sitting in this grid.",
-            "💡 Royal Hint 4: The letter 'N' appears twice! Find one, get two free."
+            "💡 Hint 1: His first name belongs to the deeply wise, handsome 4th Pandava brother!",
+            "💡 Hint 2: His second name translates to 'The Bearer of Ultimate Sacred Wisdom'.",
+            "💡 Hint 3: Look closely—there are exactly 4 unique vowels sitting in this grid.",
+            "💡 Hint 4: The letter 'N' appears twice! Find one, get two free."
         ];
         let hintIdx = 0;
 
@@ -274,13 +300,11 @@
                     
                     slot.innerHTML = `
                         <div class="transform-3d relative w-full h-full rounded-2xl shadow-xl ${isFound ? 'rotate-y-180' : ''}">
-                            <!-- CRIMSON PALACE BACKFACE -->
-                            <div class="backface-hidden absolute inset-0 bg-gradient-to-br from-[#4a0a14] via-[#24040a] to-[#4a0a14] border-2 border-amber-500/50 rounded-2xl flex items-center justify-center shadow-inner overflow-hidden">
-                                <div class="absolute inset-0 bg-amber-500/5 opacity-50 animate-pulse"></div>
-                                <span class="font-regal text-amber-400 font-bold text-xl sm:text-2xl drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]">?</span>
+                            <div class="backface-hidden absolute inset-0 bg-gradient-to-br from-[#0a2636] via-[#05151e] to-[#0a2636] border-2 border-teal-500/50 rounded-2xl flex items-center justify-center shadow-inner overflow-hidden">
+                                <div class="absolute inset-0 bg-cyan-500/5 opacity-50 animate-pulse"></div>
+                                <span class="font-regal text-cyan-400 font-bold text-xl sm:text-2xl drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]">?</span>
                             </div>
-                            <!-- SOLID SAFFRON GOLD FRONTFACE -->
-                            <div class="backface-hidden rotate-y-180 absolute inset-0 bg-gradient-to-br from-amber-400 via-amber-500 to-orange-500 rounded-2xl flex items-center justify-center text-[#180408] font-black text-xl sm:text-2xl shadow-[0_0_25px_rgba(245,158,11,0.6)] border border-yellow-200">
+                            <div class="backface-hidden rotate-y-180 absolute inset-0 bg-gradient-to-br from-amber-400 via-amber-500 to-orange-500 rounded-2xl flex items-center justify-center text-[#051319] font-black text-xl sm:text-2xl shadow-[0_0_25px_rgba(245,158,11,0.6)] border border-yellow-200">
                                 ${char}
                             </div>
                         </div>
@@ -289,25 +313,29 @@
                 });
                 dock.appendChild(row);
             });
-
-            let solvedCount = 0; secretString.split('').forEach(c => { if(rightSet.has(c)) solvedCount++; });
-            document.getElementById('found-count').innerText = solvedCount;
         }
 
         function initKeyboard() {
             const kb = document.getElementById('keyboard'); kb.innerHTML = '';
-            const letters = "ABCDEFGHIJKLM-NOPQRSTUVWXYZ".split('');
+            
+            // THE HACKER TERMINAL SCRAMBLE (26 randomized letters + 2 layout spacers)
+            const scrambledLayout = [
+                'E','X','A','P','O','M','K',
+                'U','B','L','H','Y','R','C',
+                'D','N','W','I','S','G','Z',
+                '-','V','J','T','F','Q','-'
+            ];
 
-            letters.forEach(l => {
+            scrambledLayout.forEach(l => {
                 if (l === '-') { kb.appendChild(document.createElement('div')); return; }
 
                 const btn = document.createElement('button'); btn.innerText = l;
 
-                let customStyle = "bg-[#24040a] text-amber-200/90 border-amber-500/30 active:scale-90 hover:border-amber-400 hover:bg-[#380811] shadow-md";
-                if (rightSet.has(l)) customStyle = "bg-emerald-600 text-white border-emerald-400 opacity-85 cursor-default scale-95 shadow-[0_0_12px_rgba(5,150,105,0.5)]";
+                let customStyle = "bg-[#0a222f] text-teal-100/90 border-teal-500/30 active:scale-90 hover:border-teal-300 hover:bg-[#0e3142] shadow-md";
+                if (rightSet.has(l)) customStyle = "bg-amber-500 text-[#051319] border-amber-300 opacity-90 cursor-default scale-95 shadow-[0_0_12px_rgba(245,158,11,0.5)]";
                 if (wrongSet.has(l)) customStyle = "bg-rose-950/60 text-rose-500 border-rose-800/40 opacity-30 cursor-default line-through scale-95";
 
-                btn.className = `h-10 sm:h-11 rounded-xl font-bold text-sm sm:text-base border transition-all duration-150 flex items-center justify-center ${customStyle}`;
+                btn.className = `h-10 sm:h-11 rounded-xl font-extrabold text-sm sm:text-base border transition-all duration-150 flex items-center justify-center ${customStyle}`;
                 
                 if (!rightSet.has(l) && !wrongSet.has(l)) btn.onclick = () => pressKey(l);
                 kb.appendChild(btn);
@@ -315,9 +343,17 @@
         }
 
         function pressKey(char) {
+            if (rightSet.has(char) || wrongSet.has(char)) return; // Guard against double clicks
             initAudio();
+
             if (uniqueChars.has(char)) {
-                rightSet.add(char); sfxReveal(); initBoard(); initKeyboard(); checkWinCondition();
+                rightSet.add(char); sfxReveal(); initBoard(); initKeyboard(); 
+                
+                document.getElementById('gift-count').innerText = rightSet.size;
+                
+                // TRIGGER THE GIFT BOX
+                showGiftModal(rightSet.size - 1);
+
             } else {
                 wrongSet.add(char); mistakeCount++; 
                 document.getElementById('mistake-count').innerText = mistakeCount; 
@@ -328,6 +364,27 @@
             }
         }
 
+        function showGiftModal(idx) {
+            const g = gifts[idx];
+            document.getElementById('gift-icon').innerText = g.icon;
+            document.getElementById('gift-title').innerText = g.name;
+            document.getElementById('gift-desc').innerText = g.desc;
+            
+            const modal = document.getElementById('gift-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            
+            setTimeout(() => confetti({ particleCount: 35, spread: 50, origin: { y: 0.45 } }), 100);
+        }
+
+        function closeGiftModal() {
+            document.getElementById('gift-modal').classList.add('hidden');
+            document.getElementById('gift-modal').classList.remove('flex');
+            initAudio(); sfxTap();
+            
+            // If they just closed the 10th gift (Master Key), pop the victory screen!
+            if (rightSet.size === uniqueChars.size) triggerVictory();
+        }
+
         function showHint() {
             initAudio(); sfxTap();
             const display = document.getElementById('hint-display');
@@ -336,28 +393,23 @@
             hintIdx = (hintIdx + 1) % hints.length;
         }
 
-        function triggerConfetti() { 
-            confetti({ particleCount: 85, spread: 70, origin: { y: 0.6 }, colors: ['#f59e0b', '#fbbf24', '#f97316', '#eab308'] }); 
-        }
+        function triggerConfetti() { confetti({ particleCount: 85, spread: 70, origin: { y: 0.6 }, colors: ['#06b6d4', '#10b981', '#f59e0b', '#fbbf24'] }); }
 
-        function checkWinCondition() {
-            if (rightSet.size === uniqueChars.size) {
-                sfxWin();
-                document.getElementById('header-zone').classList.add('hidden');
-                document.getElementById('board-zone').classList.add('hidden');
-                document.getElementById('control-zone').classList.add('hidden');
-                
-                const winZone = document.getElementById('victory-zone');
-                winZone.classList.remove('hidden'); winZone.classList.add('flex');
+        function triggerVictory() {
+            sfxWin();
+            document.getElementById('header-zone').classList.add('hidden');
+            document.getElementById('board-zone').classList.add('hidden');
+            document.getElementById('control-zone').classList.add('hidden');
+            
+            const winZone = document.getElementById('victory-zone');
+            winZone.classList.remove('hidden'); winZone.classList.add('flex');
 
-                const waMsg = encodeURIComponent(`🪔✨ I unlocked the Royal Naamkaran vault for NAKUL VEDANTH with only ${mistakeCount} incorrect attempts! Try to decrypt the monarchy: ${window.location.href}`);
-                document.getElementById('wa-win-btn').href = `https://api.whatsapp.com/send?text=${waMsg}`;
+            const waMsg = encodeURIComponent(`🦚✨ I unlocked the digital vault for NAKUL VEDANTH with only ${mistakeCount} mistakes and collected all 10 shower gifts! Try to beat my score: ${window.location.href}`);
+            document.getElementById('wa-win-btn').href = `https://api.whatsapp.com/send?text=${waMsg}`;
 
-                // Triple wave Saffron/Gold Confetti
-                setTimeout(() => confetti({ particleCount: 130, spread: 90, origin: { y: 0.6 }, colors: ['#f59e0b', '#fbbf24', '#f97316'] }), 100);
-                setTimeout(() => confetti({ particleCount: 90, angle: 60, spread: 65, origin: { x: 0 }, colors: ['#eab308', '#ca8a04'] }), 450);
-                setTimeout(() => confetti({ particleCount: 90, angle: 120, spread: 65, origin: { x: 1 }, colors: ['#f97316', '#ea580c'] }), 800);
-            }
+            setTimeout(() => confetti({ particleCount: 130, spread: 90, origin: { y: 0.6 }, colors: ['#06b6d4', '#10b981', '#f59e0b'] }), 100);
+            setTimeout(() => confetti({ particleCount: 90, angle: 60, spread: 65, origin: { x: 0 }, colors: ['#fbbf24', '#f59e0b'] }), 450);
+            setTimeout(() => confetti({ particleCount: 90, angle: 120, spread: 65, origin: { x: 1 }, colors: ['#0284c7', '#0d9488'] }), 800);
         }
 
         function triggerGameOver() {
@@ -368,7 +420,7 @@
             const loseZone = document.getElementById('gameover-zone');
             loseZone.classList.remove('hidden'); loseZone.classList.add('flex');
 
-            const waLoseMsg = encodeURIComponent(`🚨 I breached the 5-mistake security threshold on the Royal Naming Vault and got locked out! Can someone else in the family please go unlock Nakul Vedanth? ${window.location.href}`);
+            const waLoseMsg = encodeURIComponent(`🚨 I triggered the silent security alarms on the Baby Name Vault and got locked out! Can someone else in the family please go save Nakul Vedanth? ${window.location.href}`);
             document.getElementById('wa-lose-btn').href = `https://api.whatsapp.com/send?text=${waLoseMsg}`;
         }
 
