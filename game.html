@@ -3,91 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Royal Naamkaran</title>
+    <title>Tactical Name Decryption</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Outfit:wght@400;600;800&display=swap');
-        body { font-family: 'Outfit', sans-serif; color: #fff; overflow-x: hidden; user-select: none; margin:0; }
-        .font-regal { font-family: 'Cinzel', serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700;800&family=Share+Tech+Mono&display=swap');
+        
+        body { 
+            font-family: 'Rajdhani', sans-serif; 
+            background-color: #0a0a0c; 
+            color: #fff; 
+            overflow-x: hidden; 
+            user-select: none; 
+            margin:0; 
+            background-image: 
+                linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .font-hud { font-family: 'Share Tech Mono', monospace; }
         .perspective { perspective: 1000px; }
-        .transform-3d { transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .transform-3d { transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .rotate-y-180 { transform: rotateY(180deg); }
         .backface-hidden { backface-visibility: hidden; }
+        .glitch-glow { box-shadow: 0 0 15px rgba(34, 211, 238, 0.6), inset 0 0 10px rgba(34, 211, 238, 0.3); }
+        
+        /* Blinking cursor for the AI terminal */
+        .cursor::after {
+            content: '█';
+            animation: blink 1s step-start infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4 max-w-md mx-auto">
-
-    <!-- ANIMATED BACKGROUND VIDEO -->
-    <video autoplay muted loop playsinline poster="https://assets.mixkit.co/videos/preview/mixkit-little-child-laughing-while-playing-in-the-park-4458-small.jpg" class="fixed inset-0 w-full h-full object-cover z-0">
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-little-child-laughing-while-playing-in-the-park-4458-medium.mp4" type="video/mp4">
-    </video>
-    
-    <!-- DARKENING OVERLAY (To keep text readable) -->
-    <div class="fixed inset-0 bg-black/60 z-0"></div>
+    <div class="scanlines"></div>
+    <canvas id="data-sparks" class="absolute inset-0 pointer-events-none z-0 opacity-60"></canvas>
 
     <!-- FRONT PAGE -->
-    <div id="intro-zone" class="text-center z-10">
-        <h1 class="font-regal text-3xl font-black text-amber-400 mb-8 tracking-widest">SHUBH AARAMBH</h1>
-        <button onclick="startGame()" class="w-32 h-32 rounded-full bg-gradient-to-br from-amber-400 to-red-800 p-2 shadow-2xl active:scale-95 transition">
-            <div class="w-full h-full rounded-full bg-[#2d050a] flex items-center justify-center font-regal font-black text-amber-300">ENTER</div>
+    <div id="intro-zone" class="text-center z-10 w-full">
+        <h1 class="font-hud text-3xl font-black text-cyan-400 mb-8 tracking-widest drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">MISSION: NAME DROP</h1>
+        
+        <button onclick="startGame()" class="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-400 to-blue-800 p-1 shadow-[0_0_30px_rgba(34,211,238,0.5)] active:scale-95 transition">
+            <div class="w-full h-full rounded-full bg-[#0a0a0c] flex items-center justify-center border-2 border-cyan-500 glitch-glow">
+                <span class="font-hud text-sm font-black text-cyan-300 uppercase tracking-widest animate-pulse">INITIATE</span>
+            </div>
         </button>
     </div>
 
     <!-- GAME UI -->
-    <div id="game-zone" class="hidden w-full z-10">
+    <div id="game-zone" class="hidden w-full z-10 flex-col items-center justify-between min-h-[90vh]">
+        
         <div class="text-center w-full pt-2">
-            <span class="text-amber-400 text-[10px] font-black uppercase tracking-widest">Royal Vault Engaged</span>
-            <h1 class="font-regal text-xl font-black mt-2 text-white">REVEAL THE NAME</h1>
-            <div id="motivation" class="mt-4 text-sm italic text-amber-200/90 font-medium h-6">
-                "Begin your journey, noble traveler."
+            <span class="bg-rose-900/40 border border-rose-500 text-rose-400 px-4 py-1 rounded-sm text-[10px] font-hud font-black uppercase tracking-widest">⚠️ UPLINK ESTABLISHED</span>
+            <h2 class="font-hud text-2xl font-black mt-3 text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">DECRYPT THE TARGET</h2>
+            
+            <!-- SYSTEM STATUS -->
+            <div id="motivation" class="mt-2 text-xs font-hud text-cyan-500/80 font-medium h-4 uppercase tracking-wider">
+                > SYSTEM ONLINE. AWAITING INPUT...
             </div>
-            <div class="flex justify-center mt-2 text-xs font-bold text-amber-200/50">
-                Mistakes: <span id="mistake-count" class="text-rose-400 ml-1">0</span>
+            
+            <div class="flex justify-center gap-4 mt-3 text-xs font-bold text-slate-400 bg-slate-900/80 border border-slate-700 py-1.5 px-4 mx-auto w-max rounded-sm">
+                <span>HAZARD LEVEL: <span id="mistake-count" class="text-rose-500 text-sm ml-1 drop-shadow-[0_0_5px_rgba(244,63,94,0.8)]">0</span> <span class="text-slate-500 text-[10px]">/ 5</span></span>
             </div>
         </div>
 
-        <div id="board-zone" class="w-full my-8 flex flex-col gap-4 items-center justify-center"></div>
+        <!-- BOARD -->
+        <div id="board-zone" class="w-full my-6 flex flex-col gap-4 items-center justify-center"></div>
 
-        <div id="control-zone" class="w-full flex flex-col gap-3 pb-6 px-2">
-            <div id="keyboard" class="grid grid-cols-7 gap-2"></div>
+        <!-- AI TERMINAL & CONTROLS -->
+        <div id="control-zone" class="w-full flex flex-col gap-3 pb-2 px-2">
+            
+            <!-- AI TERMINAL BOX -->
+            <div class="bg-black/80 border border-cyan-800/50 p-3 rounded shadow-inner min-h-[4.5rem] flex flex-col">
+                <div class="flex justify-between items-center mb-1 border-b border-cyan-900 pb-1">
+                    <span class="font-hud text-[10px] text-cyan-600">SYS.AI.UPLINK</span>
+                    <button id="ai-hint-btn" onclick="requestAIIntel()" class="font-hud text-[10px] bg-cyan-900/30 hover:bg-cyan-800 text-cyan-300 px-2 py-0.5 rounded border border-cyan-700 transition active:scale-95">
+                        REQUEST AI INTEL ✨
+                    </button>
+                </div>
+                <div id="ai-terminal-output" class="font-hud text-[11px] text-cyan-400 leading-tight">
+                    > Standby for operative input. Use keys below to decrypt.
+                </div>
+            </div>
+
+            <div id="keyboard" class="grid grid-cols-7 gap-1.5"></div>
+        </div>
+    </div>
+
+    <!-- POST-MISSION MODAL -->
+    <div id="post-mission-modal" class="hidden fixed inset-0 z-40 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0a0a0c] border border-cyan-500 p-6 w-full max-w-sm rounded shadow-[0_0_40px_rgba(34,211,238,0.2)] glitch-glow flex flex-col items-center text-center">
+            
+            <h3 id="modal-title" class="font-hud text-3xl font-black text-cyan-400 mb-2">MISSION ACCOMPLISHED</h3>
+            <div id="modal-target" class="text-2xl font-black tracking-widest text-white mb-4 bg-slate-900 px-4 py-2 border border-slate-700 w-full">NAKUL VEDANTH</div>
+            
+            <!-- AI Debrief Area -->
+            <div class="w-full bg-black border border-slate-800 p-3 mb-4 text-left min-h-[5rem]">
+                <span class="font-hud text-[10px] text-slate-500 block border-b border-slate-800 pb-1 mb-1">COMMAND DEBRIEF [AI GENERATED]</span>
+                <div id="ai-debrief-output" class="font-hud text-xs text-slate-300">
+                    > Awaiting debrief generation...
+                </div>
+            </div>
+
+            <div class="flex gap-2 w-full">
+                <button onclick="window.location.reload()" class="flex-1 font-hud text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded border border-slate-600 transition active:scale-95">
+                    REBOOT SYS
+                </button>
+                <button id="ai-debrief-btn" onclick="generateDebrief()" class="flex-1 font-hud text-xs font-bold bg-cyan-900/40 hover:bg-cyan-800 text-cyan-300 py-3 rounded border border-cyan-600 transition active:scale-95">
+                    GET DEBRIEF ✨
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
         const secretString = "NAKULVEDANTH";
-        let rightSet = new Set(); let mistakeCount = 0;
+        const words = ["NAKUL", "VEDANTH"];
+        const uniqueChars = new Set(secretString.split(''));
+        let rightSet = new Set(); 
+        let wrongSet = new Set();
+        let mistakeCount = 0;
+        let isGameOver = false;
+        let isWin = false;
+        
+        // --- GEMINI API INTEGRATION ---
+        const apiKey = ""; 
+
+        async function fetchGemini(prompt, systemInstruction) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let delay of delays) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    return data.candidates[0].content.parts[0].text;
+                } catch (error) {
+                    console.warn(`Gemini API call failed, retrying in ${delay}ms...`, error);
+                    await new Promise(r => setTimeout(r, delay));
+                }
+            }
+            return "> ERROR: ENCRYPTION TOO STRONG. CONNECTION TO 'OVERSEER' LOST.";
+        }
+
+        function typeWriterEffect(elementId, text, speed = 25) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = "";
+            el.classList.add('cursor');
+            let i = 0;
+            
+            function type() {
+                if (i < text.length) {
+                    el.innerHTML = text.substring(0, i+1);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    el.classList.remove('cursor');
+                }
+            }
+            type();
+        }
+
+        async function requestAIIntel() {
+            if (isGameOver) return;
+            const btn = document.getElementById('ai-hint-btn');
+            btn.disabled = true;
+            btn.innerText = "PROCESSING...";
+            btn.classList.add('opacity-50');
+
+            typeWriterEffect('ai-terminal-output', "> ESTABLISHING NEURAL LINK TO 'OVERSEER' AI...");
+
+            const foundLetters = Array.from(rightSet).join(', ') || "none";
+            const prompt = `The target payload is 'NAKULVEDANTH'. The operative has currently decrypted these letters: [${foundLetters}]. Provide a short, cryptic, 1-2 sentence tactical hint to help them guess ONE of the remaining letters. Do NOT explicitly state the missing letter. Do NOT give away the full name. Use a gritty, cyberpunk hacker AI voice.`;
+            const sysInst = "You are OVERSEER, a rogue tactical AI assisting a hacker.";
+
+            const responseText = await fetchGemini(prompt, sysInst);
+            
+            typeWriterEffect('ai-terminal-output', `> ${responseText}`);
+            
+            btn.disabled = false;
+            btn.innerText = "REQUEST AI INTEL ✨";
+            btn.classList.remove('opacity-50');
+        }
+
+        async function generateDebrief() {
+            const btn = document.getElementById('ai-debrief-btn');
+            btn.disabled = true;
+            btn.innerText = "LINKING...";
+            btn.classList.add('opacity-50');
+
+            typeWriterEffect('ai-debrief-output', "> COMPILING MISSION DATA...");
+
+            const status = isWin ? "SUCCESS" : "FAILED (LOCKED OUT)";
+            const prompt = `Mission status: ${status}. Target Name: 'NAKULVEDANTH'. Mistakes made: ${mistakeCount}/5. Write a short, punchy 2-3 sentence performance evaluation for the operative from 'COMMAND'. Use gritty cyberpunk military terminology. Acknowledge their specific mistake count.`;
+            const sysInst = "You are COMMAND, a hardened cyberpunk military officer writing a post-mission report.";
+
+            const responseText = await fetchGemini(prompt, sysInst);
+            
+            typeWriterEffect('ai-debrief-output', `> ${responseText}`);
+            
+            btn.innerText = "REPORT LOGGED";
+        }
+        // --- END GEMINI INTEGRATION ---
+
         const encouragements = [
-            "A brilliant start! Find the next stone.",
-            "Wisdom guides your hand. Continue!",
-            "Excellent choice. The name reveals itself.",
-            "The stars favor your persistence.",
-            "You are halfway to the truth!",
-            "Steady now, the mystery deepens.",
-            "Gracefully done. Only a few remain.",
-            "The court watches your success.",
-            "Almost there, noble seeker.",
-            "A momentous revelation awaits!"
+            "> FIREWALL 10% BREACHED.",
+            "> DIRECT HIT. CONTINUING SCAN.",
+            "> SECURITY LAYER BYPASSED.",
+            "> TARGET ACQUIRING...",
+            "> SYSTEM DESTABILIZING.",
+            "> CORE EXPOSED."
         ];
 
         function startGame() {
             document.getElementById('intro-zone').classList.add('hidden');
             document.getElementById('game-zone').classList.remove('hidden');
+            document.getElementById('game-zone').classList.add('flex');
             initBoard(); initKeyboard();
         }
 
         function initBoard() {
             const dock = document.getElementById('board-zone'); dock.innerHTML = '';
-            ["NAKUL", "VEDANTH"].forEach(word => {
+            words.forEach(word => {
                 const row = document.createElement('div'); row.className = 'flex gap-2 justify-center';
                 word.split('').forEach(char => {
                     const isFound = rightSet.has(char);
                     const slot = document.createElement('div');
-                    slot.className = 'perspective w-12 h-14';
+                    slot.className = 'perspective w-10 h-12 sm:w-12 sm:h-14 flex-shrink-0';
                     slot.innerHTML = `
-                        <div class="transform-3d relative w-full h-full rounded-lg shadow-lg ${isFound ? 'rotate-y-180' : ''}">
-                            <div class="backface-hidden absolute inset-0 bg-red-950/80 border border-amber-600 rounded-lg flex items-center justify-center text-amber-700 font-black text-2xl">?</div>
-                            <div class="backface-hidden rotate-y-180 absolute inset-0 bg-amber-400 rounded-lg flex items-center justify-center text-red-950 font-black text-2xl">${char}</div>
+                        <div class="transform-3d relative w-full h-full shadow-lg ${isFound || (isGameOver && !isWin) ? 'rotate-y-180' : ''}">
+                            <div class="backface-hidden absolute inset-0 bg-[#0f172a] border border-cyan-900 flex items-center justify-center text-cyan-800 font-hud font-black text-xl sm:text-2xl">[?]</div>
+                            <div class="backface-hidden rotate-y-180 absolute inset-0 ${isGameOver && !isWin && !isFound ? 'bg-rose-900 border-rose-500 text-rose-300' : 'bg-cyan-400 border-cyan-200 text-slate-900 shadow-[0_0_15px_rgba(34,211,238,0.6)]'} border flex items-center justify-center font-hud font-black text-xl sm:text-2xl">${char}</div>
                         </div>
                     `;
                     row.appendChild(slot);
@@ -100,20 +266,88 @@
             const kb = document.getElementById('keyboard'); kb.innerHTML = '';
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
                 const btn = document.createElement('button'); btn.innerText = l;
-                btn.className = 'h-10 rounded bg-red-950/90 text-amber-200 font-black border border-amber-800 active:scale-95';
+                
+                let customStyle = "bg-slate-900 text-slate-300 font-hud font-bold border border-slate-700 active:scale-95 transition-colors";
+                if (rightSet.has(l)) customStyle = "bg-cyan-900/50 text-cyan-500 border-cyan-800 opacity-50 cursor-default scale-95";
+                if (wrongSet.has(l)) customStyle = "bg-rose-900/30 text-rose-700 border-rose-900 opacity-30 cursor-default scale-95";
+
+                btn.className = `h-10 sm:h-11 rounded-sm flex items-center justify-center ${customStyle}`;
+                
                 btn.onclick = () => {
-                    if (secretString.includes(l)) {
-                        if (!rightSet.has(l)) {
-                            rightSet.add(l);
-                            document.getElementById('motivation').innerText = `"${encouragements[rightSet.size - 1] || "Magnificent!"}"`;
-                            confetti({ particleCount: 20, gravity: 0.5 });
-                        }
+                    if (isGameOver || rightSet.has(l) || wrongSet.has(l)) return;
+                    
+                    if (uniqueChars.has(l)) {
+                        rightSet.add(l);
+                        document.getElementById('motivation').innerText = `${encouragements[Math.floor(Math.random() * encouragements.length)]}`;
+                        confetti({ particleCount: 20, gravity: 0.8, colors: ['#22d3ee', '#ffffff', '#0ea5e9'], origin: {y: 0.8} });
                         initBoard();
-                    } else { mistakeCount++; document.getElementById('mistake-count').innerText = mistakeCount; }
+                        initKeyboard();
+                        checkEndGame();
+                    } else { 
+                        wrongSet.add(l);
+                        mistakeCount++; 
+                        document.getElementById('mistake-count').innerText = mistakeCount; 
+                        document.body.style.transform = "translate(5px, 5px)";
+                        setTimeout(() => document.body.style.transform = "translate(0, 0)", 50);
+                        initKeyboard();
+                        checkEndGame();
+                    }
                 };
                 kb.appendChild(btn);
             });
         }
+
+        function checkEndGame() {
+            if (rightSet.size === uniqueChars.size) {
+                isGameOver = true;
+                isWin = true;
+                setTimeout(showPostMissionModal, 800);
+            } else if (mistakeCount >= 5) {
+                isGameOver = true;
+                isWin = false;
+                initBoard(); // Reveal remaining tiles in red
+                setTimeout(showPostMissionModal, 1000);
+            }
+        }
+
+        function showPostMissionModal() {
+            const modal = document.getElementById('post-mission-modal');
+            const title = document.getElementById('modal-title');
+            const target = document.getElementById('modal-target');
+            
+            if (isWin) {
+                title.innerText = "MISSION ACCOMPLISHED";
+                title.className = "font-hud text-3xl font-black text-cyan-400 mb-2";
+                modal.querySelector('div').className = "bg-[#0a0a0c] border border-cyan-500 p-6 w-full max-w-sm rounded shadow-[0_0_40px_rgba(34,211,238,0.2)] glitch-glow flex flex-col items-center text-center";
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } else {
+                title.innerText = "SYSTEM LOCKED";
+                title.className = "font-hud text-3xl font-black text-rose-500 mb-2 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]";
+                target.innerText = "DECRYPTION FAILED";
+                target.className = "text-xl font-black tracking-widest text-rose-300 mb-4 bg-rose-950 px-4 py-2 border border-rose-800 w-full";
+                modal.querySelector('div').className = "bg-[#0a0a0c] border border-rose-600 p-6 w-full max-w-sm rounded shadow-[0_0_40px_rgba(225,29,72,0.3)] flex flex-col items-center text-center";
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        // --- BACKGROUND ANIMATION ---
+        const canvas = document.getElementById('data-sparks'); 
+        const ctx = canvas.getContext('2d');
+        function draw() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for(let i=0; i<40; i++) { 
+                    ctx.fillStyle = Math.random() > 0.3 ? "#22d3ee" : "#f43f5e"; 
+                    ctx.beginPath(); 
+                    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 2, Math.random() * 15 + 5); 
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+        draw();
     </script>
 </body>
 </html>
