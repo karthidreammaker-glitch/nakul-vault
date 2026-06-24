@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Outfit:wght@400;600;800&display=swap');
-        body { font-family: 'Outfit', sans-serif; background: #2d050a; color: #fff; overflow-x: hidden; user-select: none; margin:0; }
+        body { font-family: 'Outfit', sans-serif; color: #fff; overflow-x: hidden; user-select: none; margin:0; }
         .font-regal { font-family: 'Cinzel', serif; }
         .perspective { perspective: 1000px; }
         .transform-3d { transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -17,7 +17,14 @@
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4 max-w-md mx-auto">
-    <canvas id="marigold-dust" class="absolute inset-0 pointer-events-none z-0 opacity-40"></canvas>
+
+    <!-- ANIMATED BACKGROUND VIDEO -->
+    <video autoplay muted loop playsinline poster="https://assets.mixkit.co/videos/preview/mixkit-little-child-laughing-while-playing-in-the-park-4458-small.jpg" class="fixed inset-0 w-full h-full object-cover z-0">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-little-child-laughing-while-playing-in-the-park-4458-medium.mp4" type="video/mp4">
+    </video>
+    
+    <!-- DARKENING OVERLAY (To keep text readable) -->
+    <div class="fixed inset-0 bg-black/60 z-0"></div>
 
     <!-- FRONT PAGE -->
     <div id="intro-zone" class="text-center z-10">
@@ -32,12 +39,11 @@
         <div class="text-center w-full pt-2">
             <span class="text-amber-400 text-[10px] font-black uppercase tracking-widest">Royal Vault Engaged</span>
             <h1 class="font-regal text-xl font-black mt-2 text-white">REVEAL THE NAME</h1>
-            <!-- MOTIVATION BOX -->
-            <div id="motivation" class="mt-4 text-sm italic text-amber-200/80 font-medium h-6">
+            <div id="motivation" class="mt-4 text-sm italic text-amber-200/90 font-medium h-6">
                 "Begin your journey, noble traveler."
             </div>
-            <div class="flex justify-center gap-6 mt-2 text-xs font-bold text-amber-200/50">
-                <span>Mistakes: <span id="mistake-count" class="text-rose-400">0</span></span>
+            <div class="flex justify-center mt-2 text-xs font-bold text-amber-200/50">
+                Mistakes: <span id="mistake-count" class="text-rose-400 ml-1">0</span>
             </div>
         </div>
 
@@ -80,7 +86,7 @@
                     slot.className = 'perspective w-12 h-14';
                     slot.innerHTML = `
                         <div class="transform-3d relative w-full h-full rounded-lg shadow-lg ${isFound ? 'rotate-y-180' : ''}">
-                            <div class="backface-hidden absolute inset-0 bg-red-950 border border-amber-600 rounded-lg flex items-center justify-center text-amber-700 font-black text-2xl">?</div>
+                            <div class="backface-hidden absolute inset-0 bg-red-950/80 border border-amber-600 rounded-lg flex items-center justify-center text-amber-700 font-black text-2xl">?</div>
                             <div class="backface-hidden rotate-y-180 absolute inset-0 bg-amber-400 rounded-lg flex items-center justify-center text-red-950 font-black text-2xl">${char}</div>
                         </div>
                     `;
@@ -94,7 +100,7 @@
             const kb = document.getElementById('keyboard'); kb.innerHTML = '';
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
                 const btn = document.createElement('button'); btn.innerText = l;
-                btn.className = 'h-10 rounded bg-red-950 text-amber-200 font-black border border-amber-800 active:scale-95';
+                btn.className = 'h-10 rounded bg-red-950/90 text-amber-200 font-black border border-amber-800 active:scale-95';
                 btn.onclick = () => {
                     if (secretString.includes(l)) {
                         if (!rightSet.has(l)) {
@@ -108,14 +114,6 @@
                 kb.appendChild(btn);
             });
         }
-
-        // Marigold Dust Effect
-        const canvas = document.getElementById('marigold-dust'); const ctx = canvas.getContext('2d');
-        function draw() {
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            for(let i=0; i<30; i++) { ctx.fillStyle = "#fbbf24"; ctx.beginPath(); ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 2, 0, 7); ctx.fill(); }
-        }
-        draw();
     </script>
 </body>
 </html>
